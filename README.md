@@ -8,3 +8,7 @@ Technological stack:
 • PostgreSQL
 
 Mockup: https://balsamiq.cloud/s9y57fq/ptih5ps/r2278
+
+ER: https://ibb.co/FHqfX3S
+
+Use Cases: https://ibb.co/09m7BsY
