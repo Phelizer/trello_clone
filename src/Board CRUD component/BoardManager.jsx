@@ -1,8 +1,9 @@
 import { useState } from "react";
 import Board from "./Board";
+import AddBoardButton from "./AddBoardButton";
 
 const BoardManager = () => {
-  const [boards] = useState([
+  const [boards, setBoards] = useState([
     {
       name: "Board 1",
       link: "dkhgsdfj",
@@ -15,8 +16,10 @@ const BoardManager = () => {
 
   return (
     <div>
-      <Board boardName={boards[0].name} />
-      <Board boardName={boards[1].name} />
+      {boards.map((val, i) => (
+        <Board boardName={val.name} />
+      ))}
+      <AddBoardButton boards={boards} setBoards={setBoards} />
     </div>
   );
 };

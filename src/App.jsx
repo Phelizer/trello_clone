@@ -1,5 +1,5 @@
 import "./App.css";
-import BoardManager from "./BoardManager";
+import BoardManager from "./Board CRUD component/BoardManager";
 
 function App() {
   return (
