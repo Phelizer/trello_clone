@@ -1,7 +1,8 @@
 import PropTypes from "prop-types";
+import "./Board.css";
 
 const Board = ({ boardName }) => (
-  <div>
+  <div className="Board">
     <div>{boardName}</div>
   </div>
 );

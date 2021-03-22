@@ -1,0 +1,9 @@
+.Board {
+  background-color: aqua;
+  border: black solid 1px;
+  margin: 0.5%;
+  padding: 10px;
+  float: left;
+  width: 24%;
+  box-sizing: border-box;
+}

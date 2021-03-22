@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import "./AddBoardButton.css";
 
 function AddBoardButton({ boards, setBoards }) {
   const handleClick = () => {
