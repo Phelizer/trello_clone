@@ -1,9 +1,13 @@
 .Board {
-  background-color: aqua;
+  background-color: #a1cb79;
   border: black solid 1px;
   margin: 0.5%;
   padding: 10px;
   float: left;
   width: 24%;
   box-sizing: border-box;
+}
+
+#BoardName {
+  float: left;
 }
