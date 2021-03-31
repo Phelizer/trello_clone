@@ -17,13 +17,14 @@ const BoardManager = () => {
   ]);
 
   return (
-    <div>
-      {boards.map((val, i) => (
+    <div className="BoardManager">
+      {boards.map((val) => (
         <Board
           boardName={val.name}
           boardID={val.id}
           boards={boards}
           setBoards={setBoards}
+          key={val.id}
         />
       ))}
       <AddBoardButton boards={boards} setBoards={setBoards} />
