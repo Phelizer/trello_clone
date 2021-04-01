@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Section from "./Section";
+import AddSectionButton from "./AddSectionButton";
 
 const TaskManager = () => {
   const [sections, setSections] = useState({
@@ -28,7 +29,7 @@ const TaskManager = () => {
         section: 2,
         priority: 1,
         timestamp: new Date().getTime(),
-        executor: null,
+        executorIDArr: [],
       },
       {
         name: "Task 2",
@@ -36,7 +37,7 @@ const TaskManager = () => {
         section: 0,
         priority: 2,
         timestamp: new Date().getTime(),
-        executor: null,
+        executorIDArr: [],
       },
       {
         name: "Task 3",
@@ -44,20 +45,17 @@ const TaskManager = () => {
         section: 0,
         priority: 2,
         timestamp: new Date().getTime(),
-        executor: null,
+        executorIDArr: [],
       },
     ],
   });
 
   return (
     <div className="TaskManager">
-      {sections.sectionArr.map(
-        (val) => (
-          <Section key={val.id} sectionName={val.name} />
-        )
-        // sections
-      )}
-      {/* add section button */}
+      {sections.sectionArr.map((val) => (
+        <Section key={val.id} sectionName={val.name} />
+      ))}
+      <AddSectionButton sections={sections} setSections={setSections} />
     </div>
   );
 };
