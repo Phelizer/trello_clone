@@ -19,6 +19,7 @@ const Board = ({ boardName, boardID, boards, setBoards }) => (
 Board.propTypes = {
   boardName: PropTypes.string.isRequired,
   boardID: PropTypes.number.isRequired,
+  //  to be fixed
   boards: PropTypes.arrayOf(PropTypes.object).isRequired,
   setBoards: PropTypes.func.isRequired,
 };

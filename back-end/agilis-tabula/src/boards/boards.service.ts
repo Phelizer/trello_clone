@@ -3,7 +3,7 @@ import { Board } from './board.model';
 
 @Injectable()
 export class BoardsService {
-  boards: Board[] = [];
+  private boards: Board[] = [];
 
   addBoard(name: string): number {
     const id = Math.floor(Math.random() * (Number.MAX_VALUE - 0)) + 0;
@@ -12,5 +12,9 @@ export class BoardsService {
     this.boards.push(board);
 
     return id;
+  }
+
+  getAllBoards() {
+    return this.boards;
   }
 }

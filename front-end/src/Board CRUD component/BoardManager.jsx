@@ -6,12 +6,10 @@ const BoardManager = () => {
   const [boards, setBoards] = useState([
     {
       name: "Board 1",
-      link: "dkhgsdfj",
       id: 0,
     },
     {
       name: "Board 2",
-      link: "dkhgsdfj",
       id: 1,
     },
   ]);
