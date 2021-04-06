@@ -1,4 +1,12 @@
-import { Body, Controller, Post, Get, Delete, Param } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Get,
+  Delete,
+  Param,
+  Header,
+} from '@nestjs/common';
 import { BoardsService } from './boards.service';
 
 @Controller('boards')
@@ -13,6 +21,8 @@ export class BoardsController {
   }
 
   // retrieving all the boards request handling
+  @Header('Access-Control-Allow-Origin', '*')
+  @Header('Access-Control-Allow-Credentials', 'true')
   @Get()
   getAllBoards() {
     return this.boardsService.getAllBoards();

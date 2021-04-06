@@ -3,7 +3,10 @@ import "./AddBoardButton.css";
 
 function AddBoardButton({ boards, setBoards }) {
   const handleClick = () => {
-    const newObject = { name: "added board", link: "to be done", id: 2 };
+    // to be changed
+    const boardName = prompt("Input board name", "New board");
+
+    const newObject = { name: boardName, link: "to be done", id: 2 };
     const updatedState = [...boards, newObject];
 
     setBoards(updatedState);
