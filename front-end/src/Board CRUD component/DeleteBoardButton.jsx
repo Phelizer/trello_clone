@@ -3,8 +3,14 @@ import "./DeleteBoardButton.css";
 
 function DeleteBoardButton({ boardID, boards, setBoards }) {
   const handleClick = () => {
-    const updatedState = boards.filter((board) => board.id !== boardID);
-    setBoards(updatedState);
+    const url = `http://localhost:3000/boards/${boardID}`;
+    fetch(url, {
+      method: "DELETE",
+    });
+    // fetch error handling to be done
+
+    // const updatedState = boards.filter((board) => board.id !== boardID);
+    // setBoards(updatedState);
   };
   return (
     <div className="DeleteBoardButton">
