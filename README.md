@@ -2,6 +2,7 @@ The main goal of this project is to create the clone of Trello with basic functi
 
 Technological stack:
 • Javascript
+• Typescript
 • React
 • Node.js
 • NestJS
