@@ -7,9 +7,9 @@ export class BoardsController {
 
   // creating new board request handling
   @Post()
-  addBoard(@Body('name') boardName: string): any {
-    const boardId = this.boardsService.addBoard(boardName);
-    return { id: boardId };
+  addBoard(@Body('name') boardName: string) {
+    const boards = this.boardsService.addBoard(boardName);
+    return boards;
   }
 
   // retrieving all the boards request handling

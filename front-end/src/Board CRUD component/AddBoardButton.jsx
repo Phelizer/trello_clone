@@ -21,10 +21,22 @@ function AddBoardButton({ boards, setBoards }) {
       if (boardName === null) return;
     }
 
-    const newObject = { name: boardName, link: "to be done", id: 2 };
-    const updatedState = [...boards, newObject];
+    const url = "http://localhost:3000/boards";
+    fetch(url, {
+      method: "POST",
+      body: JSON.stringify({
+        name: boardName,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        setBoards(result);
+      });
 
-    setBoards(updatedState);
+    // setBoards(updatedState);
   };
 
   return (

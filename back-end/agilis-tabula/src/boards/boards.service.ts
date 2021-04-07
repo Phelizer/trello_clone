@@ -5,7 +5,7 @@ import { Board } from './board.model';
 export class BoardsService {
   private boards: Board[] = [];
 
-  addBoard(name: string): number {
+  addBoard(name: string): Array<Board> {
     // generating a pseudo id
     const id = Math.floor(Math.random() * (100000 - 0)) + 0;
 
@@ -17,14 +17,14 @@ export class BoardsService {
     const board = new Board(name, id);
     this.boards.push(board);
 
-    return id;
-  }
-
-  getAllBoards() {
     return this.boards;
   }
 
-  removeBoard(id: number) {
+  getAllBoards(): Array<Board> {
+    return this.boards;
+  }
+
+  removeBoard(id: number): Array<Board> {
     // error handling
     const searchedBoard = this.boards.find((board) => board.id === id);
     if (!searchedBoard) {
