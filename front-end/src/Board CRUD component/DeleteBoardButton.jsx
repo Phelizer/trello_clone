@@ -6,11 +6,23 @@ function DeleteBoardButton({ boardID, boards, setBoards }) {
     const url = `http://localhost:3000/boards/${boardID}`;
     fetch(url, {
       method: "DELETE",
-    });
-    // fetch error handling to be done
-
-    // const updatedState = boards.filter((board) => board.id !== boardID);
-    // setBoards(updatedState);
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        if (result.error) {
+          // if there is already no board with that id on server side
+          // than we simply delete it from client's state
+          const updatedState = boards.filter((board) => board.id !== boardID);
+          setBoards(updatedState);
+          return;
+        }
+        // if everything is ok and there is a board
+        // that we want to remove on server side
+        // than we wet new state to BoardManager with
+        // all the rest boards
+        setBoards(result);
+      });
+    // TODO: fetch error handling to be done
   };
   return (
     <div className="DeleteBoardButton">

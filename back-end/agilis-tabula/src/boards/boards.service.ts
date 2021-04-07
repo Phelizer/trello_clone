@@ -33,6 +33,6 @@ export class BoardsService {
 
     // deleting the board
     this.boards = this.boards.filter((board) => board.id !== id);
-    return id;
+    return this.boards;
   }
 }
