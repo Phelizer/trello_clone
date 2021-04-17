@@ -32,17 +32,50 @@ export class SectionsService {
 
   removeSection(boardID: number, sectionID: number): Section[] {
     // error handling
-    const searchedSection = this.boardsToSections[boardID].find(
-      (board) => board.id === sectionID,
-    );
-    if (!searchedSection) {
+    if (!this.sectionExists(boardID, sectionID))
       throw new NotFoundException('Could not find section with such ID');
-    }
 
     this.boardsToSections[boardID] = this.boardsToSections[boardID].filter(
       (sec) => sec.id !== sectionID,
     );
 
     return this.boardsToSections[boardID];
+  }
+
+  changePosition(
+    boardID: number,
+    sectionID: number,
+    newPos: number,
+  ): Section[] {
+    // error handling
+    if (!this.sectionExists(boardID, sectionID))
+      throw new NotFoundException('Could not find section with such ID');
+
+    const searchedSection = this.boardsToSections[boardID].find(
+      (sec) => sec.id === sectionID,
+    );
+
+    searchedSection.position = newPos;
+    return this.boardsToSections[boardID];
+  }
+
+  // error handling utils
+
+  // this function checks it there is a section in DB
+  // with such id
+  sectionExists(boardID: number, sectionID: number): boolean {
+    if (!this.boardExists(boardID))
+      throw new NotFoundException('Could not find board with such ID');
+
+    const searchedSection = this.boardsToSections[boardID].find(
+      (sec) => sec.id === sectionID,
+    );
+    return searchedSection ? true : false;
+  }
+
+  // this function checks it there is a board in DB
+  // with such id
+  boardExists(boardID: number): boolean {
+    return this.boardsToSections[boardID] ? true : false;
   }
 }

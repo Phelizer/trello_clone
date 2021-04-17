@@ -1,4 +1,12 @@
-import { Body, Controller, Post, Get, Param, Delete } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Get,
+  Param,
+  Delete,
+  Patch,
+} from '@nestjs/common';
 import { SectionsService } from './sections.service';
 
 @Controller('board')
@@ -23,5 +31,15 @@ export class SectionsController {
     const boardID = parseInt(param.boardID);
     const sectionID = parseInt(param.sectionID);
     return this.sectionsService.removeSection(boardID, sectionID);
+  }
+
+  @Patch(':boardID/:sectionID')
+  changeSectionPosition(
+    @Param() param: { boardID: string; sectionID: string },
+    @Body('newPosition') newPos: number,
+  ) {
+    const boardID = parseInt(param.boardID);
+    const sectionID = parseInt(param.sectionID);
+    return this.sectionsService.changePosition(boardID, sectionID, newPos);
   }
 }
