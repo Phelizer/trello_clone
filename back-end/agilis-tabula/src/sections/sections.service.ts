@@ -27,7 +27,8 @@ export class SectionsService {
   }
 
   getAllSections(boardID: number): Section[] {
-    return this.boardsToSections[boardID];
+    const sections = this.boardsToSections[boardID];
+    return sections ? sections : [];
   }
 
   removeSection(boardID: number, sectionID: number): Section[] {

@@ -8,7 +8,7 @@ const BoardManager = () => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   // boards is a list of boards,
-  // whixh should be fetched from the server
+  // which should be fetched from the server
   const [boards, setBoards] = useState([]);
 
   // fetching the list of boards

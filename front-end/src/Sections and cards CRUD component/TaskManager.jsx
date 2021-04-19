@@ -1,25 +1,35 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Section from "./Section";
 import AddSectionButton from "./AddSectionButton";
+import { getPath } from "../Utils/Utils";
 
 const TaskManager = () => {
-  const [sections, setSections] = useState([
-    {
-      name: "Section 1",
-      id: 0,
-      position: 0,
-    },
-    {
-      name: "Section 2",
-      id: 1,
-      position: 1,
-    },
-    {
-      name: "Section 3",
-      id: 2,
-      position: 2,
-    },
-  ]);
+  // needed for fetch error handling
+  const [error, setError] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // sections is a list of sections,
+  // which should be fetched from the server
+  const [sections, setSections] = useState([]);
+
+  // fetching the list of sections
+  useEffect(() => {
+    // get array of path elements
+    const path = getPath(window);
+
+    fetch(`http://localhost:3000/board/${path[0]}`)
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          setIsLoaded(true);
+          setSections(result);
+        },
+        (err) => {
+          setIsLoaded(true);
+          setError(err);
+        }
+      );
+  }, []);
 
   const [tasks, setTasks] = useState([
     {
@@ -47,6 +57,14 @@ const TaskManager = () => {
       executorIDArr: [],
     },
   ]);
+
+  // fetch error handling
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+  if (!isLoaded) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="TaskManager">

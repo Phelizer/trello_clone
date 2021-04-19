@@ -35,8 +35,6 @@ function AddBoardButton({ boards, setBoards }) {
       .then((result) => {
         setBoards(result);
       });
-
-    // setBoards(updatedState);
   };
 
   return (
