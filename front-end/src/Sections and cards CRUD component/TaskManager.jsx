@@ -75,6 +75,8 @@ const TaskManager = () => {
           sectionID={val.id}
           sections={sections}
           setSections={setSections}
+          tasks={tasks}
+          setTasks={setTasks}
         />
       ))}
       <AddSectionButton sections={sections} setSections={setSections} />
