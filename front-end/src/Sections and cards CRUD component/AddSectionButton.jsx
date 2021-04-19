@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 // import "./AddSectionButton.css";
 import { getPath } from "../Utils/Utils";
 
-function AddSectionButton({ sections, setSections }) {
+function AddSectionButton({ setSections }) {
   const handleClick = () => {
     const sectionName = prompt("Input section name", "New section");
 
@@ -35,13 +35,13 @@ function AddSectionButton({ sections, setSections }) {
 }
 
 AddSectionButton.propTypes = {
-  sections: PropTypes.arrayOf(
+  /* sections: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
       id: PropTypes.number,
       position: PropTypes.number,
     })
-  ).isRequired,
+  ).isRequired, */
   setSections: PropTypes.func.isRequired,
 };
 

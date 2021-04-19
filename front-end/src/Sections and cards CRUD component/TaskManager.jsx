@@ -79,7 +79,7 @@ const TaskManager = () => {
           setTasks={setTasks}
         />
       ))}
-      <AddSectionButton sections={sections} setSections={setSections} />
+      <AddSectionButton setSections={setSections} />
     </div>
   );
 };

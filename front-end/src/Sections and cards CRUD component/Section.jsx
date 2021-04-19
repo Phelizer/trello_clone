@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import "./Section.css";
 import DeleteSectionButton from "./DeleteSectionButton";
 import Task from "./Task";
+import AddTaskButton from "./AddTaskButton";
 
 const Section = ({
   sectionName,
@@ -19,8 +20,9 @@ const Section = ({
       setSections={setSections}
     />
     {tasks.map((task) => (
-      <Task taskName={task.name} />
+      <Task taskName={task.name} key={task.id} setTasks={setTasks} />
     ))}
+    <AddTaskButton />
   </div>
 );
 
