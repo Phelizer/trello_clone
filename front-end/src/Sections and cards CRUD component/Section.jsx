@@ -19,10 +19,12 @@ const Section = ({
       sections={sections}
       setSections={setSections}
     />
-    {tasks.map((task) => (
-      <Task taskName={task.name} key={task.id} setTasks={setTasks} />
-    ))}
-    <AddTaskButton />
+    {tasks
+      .filter((task) => task.section === sectionID)
+      .map((task) => (
+        <Task taskName={task.name} key={task.id} setTasks={setTasks} />
+      ))}
+    <AddTaskButton sectionID={sectionID} setTasks={setTasks} />
   </div>
 );
 

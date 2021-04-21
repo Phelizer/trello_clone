@@ -8,10 +8,14 @@ import {
   Patch,
 } from '@nestjs/common';
 import { SectionsService } from './sections.service';
+import { TasksService } from './tasks.service';
 
 @Controller('board')
 export class SectionsController {
-  constructor(private readonly sectionsService: SectionsService) {}
+  constructor(
+    private readonly sectionsService: SectionsService,
+    private readonly tasksService: TasksService,
+  ) {}
 
   @Post(':boardID')
   addSection(@Body('name') name: string, @Param() idObj: { boardID: string }) {
@@ -23,7 +27,10 @@ export class SectionsController {
   @Get(':boardID')
   getAllSections(@Param() param: { boardID: string }) {
     const boardID = parseInt(param.boardID);
-    return this.sectionsService.getAllSections(boardID);
+    const sections = this.sectionsService.getAllSections(boardID);
+    const tasks = this.tasksService.getAllTasks(boardID);
+
+    return { sections: sections, tasks: tasks };
   }
 
   @Delete(':boardID/:sectionID')

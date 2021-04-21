@@ -8,9 +8,8 @@ const TaskManager = () => {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // sections is a list of sections,
-  // which should be fetched from the server
   const [sections, setSections] = useState([]);
+  const [tasks, setTasks] = useState([]);
 
   // fetching the list of sections
   useEffect(() => {
@@ -22,7 +21,8 @@ const TaskManager = () => {
       .then(
         (result) => {
           setIsLoaded(true);
-          setSections(result);
+          setSections(result.sections);
+          setTasks(result.tasks);
         },
         (err) => {
           setIsLoaded(true);
@@ -30,33 +30,6 @@ const TaskManager = () => {
         }
       );
   }, []);
-
-  const [tasks, setTasks] = useState([
-    {
-      name: "Task 1",
-      id: 0,
-      section: 2,
-      priority: 1,
-      timestamp: new Date().getTime(),
-      executorIDArr: [],
-    },
-    {
-      name: "Task 2",
-      id: 1,
-      section: 0,
-      priority: 2,
-      timestamp: new Date().getTime(),
-      executorIDArr: [],
-    },
-    {
-      name: "Task 3",
-      id: 2,
-      section: 0,
-      priority: 2,
-      timestamp: new Date().getTime(),
-      executorIDArr: [],
-    },
-  ]);
 
   // fetch error handling
   if (error) {
