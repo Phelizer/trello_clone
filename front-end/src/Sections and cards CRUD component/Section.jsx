@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import "./Section.css";
+import { Droppable } from "react-beautiful-dnd";
 import DeleteSectionButton from "./DeleteSectionButton";
 import Task from "./Task";
 import AddTaskButton from "./AddTaskButton";
@@ -12,26 +13,37 @@ const Section = ({
   tasks,
   setTasks,
 }) => (
-  <div className="Section">
-    <div>{sectionName}</div>
-    <DeleteSectionButton
-      sectionID={sectionID}
-      sections={sections}
-      setSections={setSections}
-    />
-    {tasks
-      .filter((task) => task.section === sectionID)
-      .map((task) => (
-        <Task
-          taskName={task.name}
-          key={task.id}
-          taskID={task.id}
-          setTasks={setTasks}
-          tasks={tasks}
+  <Droppable droppableId={`section-${sectionID}`}>
+    {(provided) => (
+      <div
+        className="Section"
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        {...provided.droppableProps}
+        ref={provided.innerRef}
+      >
+        <div>{sectionName}</div>
+        <DeleteSectionButton
+          sectionID={sectionID}
+          sections={sections}
+          setSections={setSections}
         />
-      ))}
-    <AddTaskButton sectionID={sectionID} setTasks={setTasks} />
-  </div>
+        {tasks
+          .filter((task) => task.section === sectionID)
+          .map((task, index) => (
+            <Task
+              taskName={task.name}
+              key={task.id}
+              taskID={task.id}
+              setTasks={setTasks}
+              tasks={tasks}
+              index={index}
+            />
+          ))}
+        {provided.placeholder}
+        <AddTaskButton sectionID={sectionID} setTasks={setTasks} />
+      </div>
+    )}
+  </Droppable>
 );
 
 Section.propTypes = {

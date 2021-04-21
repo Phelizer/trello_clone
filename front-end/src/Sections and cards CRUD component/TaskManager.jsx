@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { DragDropContext } from "react-beautiful-dnd";
 import Section from "./Section";
 import AddSectionButton from "./AddSectionButton";
 import { getPath } from "../Utils/Utils";
@@ -39,21 +40,50 @@ const TaskManager = () => {
     return <div>Loading...</div>;
   }
 
+  // handler for dropping the task into section
+  const onDrop = (dropResult) => {
+    if (!dropResult.destination) return;
+    const sectionID = parseInt(
+      dropResult.destination.droppableId.split("-")[1],
+      10
+    );
+    const taskID = parseInt(dropResult.draggableId.split("-")[1], 10);
+    const path = getPath(window);
+    const boardID = path[0];
+
+    const url = `http://localhost:3000/task/${boardID}/${taskID}`;
+    fetch(url, {
+      method: "PATCH",
+      body: JSON.stringify({
+        newSection: sectionID,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        setTasks(result);
+      });
+  };
+
   return (
-    <div className="TaskManager">
-      {sections.map((val) => (
-        <Section
-          key={val.id}
-          sectionName={val.name}
-          sectionID={val.id}
-          sections={sections}
-          setSections={setSections}
-          tasks={tasks}
-          setTasks={setTasks}
-        />
-      ))}
-      <AddSectionButton setSections={setSections} />
-    </div>
+    <DragDropContext onDragEnd={onDrop}>
+      <div className="TaskManager">
+        {sections.map((val) => (
+          <Section
+            key={val.id}
+            sectionName={val.name}
+            sectionID={val.id}
+            sections={sections}
+            setSections={setSections}
+            tasks={tasks}
+            setTasks={setTasks}
+          />
+        ))}
+        <AddSectionButton setSections={setSections} />
+      </div>
+    </DragDropContext>
   );
 };
 
