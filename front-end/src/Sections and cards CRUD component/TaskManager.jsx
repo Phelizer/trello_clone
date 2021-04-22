@@ -41,7 +41,7 @@ const TaskManager = () => {
   }
 
   // handler for dropping the task into section
-  const onDrop = (dropResult) => {
+  const onTaskDrop = (dropResult) => {
     if (!dropResult.destination) return;
     const sectionID = parseInt(
       dropResult.destination.droppableId.split("-")[1],
@@ -68,7 +68,7 @@ const TaskManager = () => {
   };
 
   return (
-    <DragDropContext onDragEnd={onDrop}>
+    <DragDropContext onDragEnd={onTaskDrop}>
       <div className="TaskManager">
         {sections.map((val) => (
           <Section

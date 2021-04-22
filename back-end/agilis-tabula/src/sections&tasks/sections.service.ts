@@ -56,6 +56,28 @@ export class SectionsService {
       (sec) => sec.id === sectionID,
     );
 
+    const currPos = searchedSection.position;
+
+    // finding all the sections
+    // which positions should be changed
+    const sectionsToUpdate = this.boardsToSections[boardID].filter(
+      (sec) =>
+        (sec.position >= newPos && sec.position < currPos) ||
+        (sec.position <= newPos && sec.position > currPos),
+    );
+
+    // updating positions of affected sections
+    for (const sec of sectionsToUpdate) {
+      switch (newPos < currPos) {
+        case true:
+          sec.position++;
+          break;
+        case false:
+          sec.position--;
+          break;
+      }
+    }
+
     searchedSection.position = newPos;
     return this.boardsToSections[boardID];
   }
