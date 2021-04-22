@@ -36,8 +36,22 @@ export class SectionsService {
     if (!this.sectionExists(boardID, sectionID))
       throw new NotFoundException('Could not find section with such ID');
 
+    const deletedSec = this.boardsToSections[boardID].find(
+      (sec: Section) => sec.id === sectionID,
+    );
+
+    const deletedPos = deletedSec.position;
+
+    const sectionsToUpdate = this.boardsToSections[boardID].filter(
+      (sec: Section) => sec.position > deletedPos,
+    );
+
+    // updating positions of all the affected sections
+    for (const sec of sectionsToUpdate) sec.position--;
+
+    // deleting the section
     this.boardsToSections[boardID] = this.boardsToSections[boardID].filter(
-      (sec) => sec.id !== sectionID,
+      (sec: Section) => sec.id !== sectionID,
     );
 
     return this.boardsToSections[boardID];
@@ -53,7 +67,7 @@ export class SectionsService {
       throw new NotFoundException('Could not find section with such ID');
 
     const searchedSection = this.boardsToSections[boardID].find(
-      (sec) => sec.id === sectionID,
+      (sec: Section) => sec.id === sectionID,
     );
 
     const currPos = searchedSection.position;
@@ -61,7 +75,7 @@ export class SectionsService {
     // finding all the sections
     // which positions should be changed
     const sectionsToUpdate = this.boardsToSections[boardID].filter(
-      (sec) =>
+      (sec: Section) =>
         (sec.position >= newPos && sec.position < currPos) ||
         (sec.position <= newPos && sec.position > currPos),
     );
@@ -91,7 +105,7 @@ export class SectionsService {
       throw new NotFoundException('Could not find board with such ID');
 
     const searchedSection = this.boardsToSections[boardID].find(
-      (sec) => sec.id === sectionID,
+      (sec: Section) => sec.id === sectionID,
     );
     return searchedSection ? true : false;
   }
