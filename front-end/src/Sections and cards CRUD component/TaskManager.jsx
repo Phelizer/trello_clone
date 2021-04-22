@@ -12,6 +12,8 @@ const TaskManager = () => {
   const [sections, setSections] = useState([]);
   const [tasks, setTasks] = useState([]);
 
+  const [currentSection, setCurrentSection] = useState(null);
+
   // fetching the list of sections
   useEffect(() => {
     // get array of path elements
@@ -39,6 +41,50 @@ const TaskManager = () => {
   if (!isLoaded) {
     return <div>Loading...</div>;
   }
+
+  // functions for handling sections drag n drop
+  const dragStartHandler = (event, secID) => {
+    setCurrentSection(secID);
+  };
+  const dragLeaveHandler = (event) => {};
+  const dragEndHandler = (event) => {};
+  const dragOverHandler = (event) => {
+    event.preventDefault();
+  };
+  const dropHandler = (event, secID) => {
+    event.preventDefault();
+
+    const path = getPath(window);
+    const boardID = path[0];
+    const sectionID = currentSection;
+    const newPos = sections.find((sec) => sec.id === secID).position;
+
+    const url = `http://localhost:3000/board/${boardID}/${sectionID}`;
+    fetch(url, {
+      method: "PATCH",
+      body: JSON.stringify({
+        newPosition: newPos,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        setSections(result);
+      });
+  };
+
+  const dndHandlerBundle = {
+    dragStartHandler,
+    dragLeaveHandler,
+    dragEndHandler,
+    dragOverHandler,
+    dropHandler,
+  };
+
+  const sortedSections = (arr) =>
+    arr.sort((a, b) => (a.position < b.position ? -1 : 1));
 
   // handler for dropping the task into section
   const onTaskDrop = (dropResult) => {
@@ -70,7 +116,7 @@ const TaskManager = () => {
   return (
     <DragDropContext onDragEnd={onTaskDrop}>
       <div className="TaskManager">
-        {sections.map((val) => (
+        {sortedSections(sections).map((val) => (
           <Section
             key={val.id}
             sectionName={val.name}
@@ -79,6 +125,7 @@ const TaskManager = () => {
             setSections={setSections}
             tasks={tasks}
             setTasks={setTasks}
+            dndHandlers={dndHandlerBundle}
           />
         ))}
         <AddSectionButton setSections={setSections} />
