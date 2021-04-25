@@ -1,7 +1,10 @@
 import PropTypes from "prop-types";
 import "./AddBoardButton.css";
+import { useContext } from "react";
+import { CookieContext } from "../CookiesContext";
 
 function AddBoardButton({ boards, setBoards }) {
+  const [cookies] = useContext(CookieContext);
   const handleClick = () => {
     // to be changed:
     let boardName = prompt("Input board name", "New board");
@@ -29,6 +32,7 @@ function AddBoardButton({ boards, setBoards }) {
       }),
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${cookies.JWT}`,
       },
     })
       .then((res) => res.json())

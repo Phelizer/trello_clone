@@ -1,7 +1,11 @@
 import PropTypes from "prop-types";
+import { useContext } from "react";
 import { getPath } from "../Utils/Utils";
+import { CookieContext } from "../CookiesContext";
 
 const DeleteTaskButton = ({ taskID, tasks, setTasks }) => {
+  const [cookies] = useContext(CookieContext);
+
   const handleClick = () => {
     // get array of path elements
     const path = getPath(window);
@@ -9,6 +13,10 @@ const DeleteTaskButton = ({ taskID, tasks, setTasks }) => {
     const url = `http://localhost:3000/task/${path[0]}/${taskID}`;
     fetch(url, {
       method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${cookies.JWT}`,
+      },
     })
       .then((res) => res.json())
       .then((result) => {

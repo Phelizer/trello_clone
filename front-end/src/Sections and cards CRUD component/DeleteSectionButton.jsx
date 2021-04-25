@@ -1,8 +1,12 @@
 import PropTypes from "prop-types";
 // import "./DeleteBoardButton.css";
+import { useContext } from "react";
 import { getPath } from "../Utils/Utils";
+import { CookieContext } from "../CookiesContext";
 
 function DeleteSectionButton({ sectionID, sections, setSections }) {
+  const [cookies] = useContext(CookieContext);
+
   const handleClick = () => {
     // get array of path elements
     const path = getPath(window);
@@ -10,6 +14,9 @@ function DeleteSectionButton({ sectionID, sections, setSections }) {
     const url = `http://localhost:3000/board/${path[0]}/${sectionID}`;
     fetch(url, {
       method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${cookies.JWT}`,
+      },
     })
       .then((res) => res.json())
       .then((result) => {

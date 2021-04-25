@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import Board from "./Board";
 import AddBoardButton from "./AddBoardButton";
+import { CookieContext } from "../CookiesContext";
 
 const BoardManager = () => {
   // needed for fetch error handling
@@ -11,9 +12,16 @@ const BoardManager = () => {
   // which should be fetched from the server
   const [boards, setBoards] = useState([]);
 
+  const [cookies] = useContext(CookieContext);
+
   // fetching the list of boards
   useEffect(() => {
-    fetch("http://localhost:3000/boards")
+    fetch("http://localhost:3000/boards", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${cookies.JWT}`,
+      },
+    })
       .then((res) => res.json())
       .then(
         (result) => {
@@ -25,7 +33,7 @@ const BoardManager = () => {
           setError(err);
         }
       );
-  }, []);
+  }, [cookies.JWT]);
 
   // fetch error handling
   if (error) {

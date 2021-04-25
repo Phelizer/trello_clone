@@ -1,11 +1,18 @@
 import PropTypes from "prop-types";
 import "./DeleteBoardButton.css";
+import { useContext } from "react";
+import { CookieContext } from "../CookiesContext";
 
 function DeleteBoardButton({ boardID, boards, setBoards }) {
+  const [cookies] = useContext(CookieContext);
+
   const handleClick = () => {
     const url = `http://localhost:3000/boards/${boardID}`;
     fetch(url, {
       method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${cookies.JWT}`,
+      },
     })
       .then((res) => res.json())
       .then((result) => {

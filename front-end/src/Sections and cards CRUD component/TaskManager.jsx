@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import Section from "./Section";
 import AddSectionButton from "./AddSectionButton";
 import { getPath } from "../Utils/Utils";
+import { CookieContext } from "../CookiesContext";
 
 const TaskManager = () => {
   // needed for fetch error handling
@@ -14,12 +15,19 @@ const TaskManager = () => {
 
   const [currentSection, setCurrentSection] = useState(null);
 
+  const [cookies] = useContext(CookieContext);
+
   // fetching the list of sections
   useEffect(() => {
     // get array of path elements
     const path = getPath(window);
 
-    fetch(`http://localhost:3000/board/${path[0]}`)
+    fetch(`http://localhost:3000/board/${path[0]}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${cookies.JWT}`,
+      },
+    })
       .then((res) => res.json())
       .then(
         (result) => {
@@ -32,7 +40,7 @@ const TaskManager = () => {
           setError(err);
         }
       );
-  }, []);
+  }, [cookies.JWT]);
 
   // fetch error handling
   if (error) {
@@ -67,6 +75,7 @@ const TaskManager = () => {
       }),
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${cookies.JWT}`,
       },
     })
       .then((res) => res.json())
@@ -105,6 +114,7 @@ const TaskManager = () => {
       }),
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${cookies.JWT}`,
       },
     })
       .then((res) => res.json())

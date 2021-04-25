@@ -1,7 +1,11 @@
 import PropTypes from "prop-types";
+import { useContext } from "react";
 import { getPath } from "../Utils/Utils";
+import { CookieContext } from "../CookiesContext";
 
 const AddTaskButton = ({ setTasks, sectionID }) => {
+  const [cookies] = useContext(CookieContext);
+
   const handleClick = () => {
     const taskName = prompt("Input task");
 
@@ -18,6 +22,7 @@ const AddTaskButton = ({ setTasks, sectionID }) => {
       }),
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${cookies.JWT}`,
       },
     })
       .then((res) => res.json())

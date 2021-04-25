@@ -1,8 +1,12 @@
 import PropTypes from "prop-types";
 // import "./AddSectionButton.css";
+import { useContext } from "react";
 import { getPath } from "../Utils/Utils";
+import { CookieContext } from "../CookiesContext";
 
 function AddSectionButton({ setSections }) {
+  const [cookies] = useContext(CookieContext);
+
   const handleClick = () => {
     const sectionName = prompt("Input section name", "New section");
 
@@ -17,6 +21,7 @@ function AddSectionButton({ setSections }) {
       }),
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${cookies.JWT}`,
       },
     })
       .then((res) => res.json())
