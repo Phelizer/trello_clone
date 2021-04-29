@@ -1,0 +1,9 @@
+.Team {
+  border: black solid 1px;
+  padding: 0.5vh;
+  margin: 0.5vh;
+}
+
+.Members {
+  float: right;
+}

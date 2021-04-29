@@ -1,0 +1,7 @@
+.TeamManager {
+  height: 100vh;
+  width: 15vw;
+  border: black solid 1px;
+  box-sizing: border-box;
+  float: left;
+}
