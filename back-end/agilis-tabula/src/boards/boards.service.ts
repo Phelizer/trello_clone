@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Board } from './board.model';
+import { pool } from '../dbPool';
 
 @Injectable()
 export class BoardsService {
@@ -20,7 +21,9 @@ export class BoardsService {
     return this.boards;
   }
 
-  getAllBoards(): Array<Board> {
+  async getAllBoards(): Promise<Board[]> {
+    const data = await pool.query('SELECT * FROM users');
+    console.log(data);
     return this.boards;
   }
 
