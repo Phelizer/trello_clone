@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Board } from './board.model';
+import { ExtendedBoard } from './ExtendedBoard.model';
 import { pool } from '../dbPool';
 
 @Injectable()
@@ -21,10 +22,24 @@ export class BoardsService {
     return this.boards;
   }
 
-  async getAllBoards(): Promise<Board[]> {
-    const data = await pool.query('SELECT * FROM users');
-    console.log(data);
-    return this.boards;
+  async getAllBoards(user_id: number): Promise<Array<ExtendedBoard>> {
+    const boards = await pool.query(
+      'SELECT board_id, board_name, boards.team_id, team_name FROM teams_users LEFT JOIN boards ON teams_users.team_id = boards.team_id' +
+        ' LEFT JOIN teams ON boards.team_id = teams.team_id WHERE user_id = $1;',
+      [user_id],
+    );
+
+    const extBoards = boards.rows.map(
+      (board) =>
+        new ExtendedBoard(
+          board.board_name,
+          board.board_id,
+          board.team_name,
+          board.team_id,
+        ),
+    );
+
+    return extBoards;
   }
 
   removeBoard(id: number): Array<Board> {
