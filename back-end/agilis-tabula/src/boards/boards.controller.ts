@@ -16,8 +16,11 @@ export class BoardsController {
 
   // creating new board request handling
   @Post()
-  addBoard(@Body('name') boardName: string) {
-    const boards = this.boardsService.addBoard(boardName);
+  async addBoard(
+    @Body('name') boardName: string,
+    @Body('team_id') team_id: number,
+  ) {
+    const boards = this.boardsService.addBoard(boardName, team_id);
     return boards;
   }
 

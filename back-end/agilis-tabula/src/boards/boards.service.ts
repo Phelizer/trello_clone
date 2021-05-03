@@ -7,17 +7,25 @@ import { pool } from '../dbPool';
 export class BoardsService {
   private boards: Board[] = [];
 
-  addBoard(name: string): Array<Board> {
-    // generating a pseudo id
-    const id = Math.floor(Math.random() * (100000 - 0)) + 0;
-
+  async addBoard(name: string, team_id: number): Promise<Array<Board>> {
     if (!name) {
       throw new Error('Invalid name');
     }
 
+    await pool.query(
+      'INSERT INTO boards (board_name, team_id) VALUES ($1, $2);',
+      [name, team_id],
+    );
+
+    const boards = await pool.query(
+      'SELECT board_id, board_name, boards.team_id, team_name FROM boards LEFT JOIN teams ON boards.team_id = teams.team_id;',
+    );
+
+    console.log(this.convertToBoards(boards.rows));
+
     // creating board
-    const board = new Board(name, id);
-    this.boards.push(board);
+    //const board = new Board(name, id);
+    //this.boards.push(board);
 
     return this.boards;
   }
@@ -29,15 +37,7 @@ export class BoardsService {
       [user_id],
     );
 
-    const extBoards = boards.rows.map(
-      (board) =>
-        new ExtendedBoard(
-          board.board_name,
-          board.board_id,
-          board.team_name,
-          board.team_id,
-        ),
-    );
+    const extBoards = this.convertToBoards(boards.rows);
 
     return extBoards;
   }
@@ -52,5 +52,22 @@ export class BoardsService {
     // deleting the board
     this.boards = this.boards.filter((board) => board.id !== id);
     return this.boards;
+  }
+
+  // converts array of plain objects from db
+  // to array of objects of ExtendedBoard class
+
+  convertToBoards(boardArr): Array<ExtendedBoard> {
+    const extBoards = boardArr.map(
+      (board) =>
+        new ExtendedBoard(
+          board.board_name,
+          board.board_id,
+          board.team_name,
+          board.team_id,
+        ),
+    );
+
+    return extBoards;
   }
 }

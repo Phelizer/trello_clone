@@ -5,20 +5,23 @@ import BoardManager from "./Board CRUD component/BoardManager";
 import TaskManager from "./Sections and cards CRUD component/TaskManager";
 import { CookieProvider } from "./CookiesContext";
 import BoardScreen from "./BoardScreen";
+import { CurrentTeamProvider } from "./CurrentTeamContext";
 
 function App() {
   return (
-    <CookieProvider>
-      <Router>
-        <div className="App">
-          <Switch>
-            <Route path="/" exact component={AuthPage} />
-            <Route path="/boards" exact component={BoardScreen} />
-            <Route path="/:id" component={TaskManager} />
-          </Switch>
-        </div>
-      </Router>
-    </CookieProvider>
+    <CurrentTeamProvider>
+      <CookieProvider>
+        <Router>
+          <div className="App">
+            <Switch>
+              <Route path="/" exact component={AuthPage} />
+              <Route path="/boards" exact component={BoardScreen} />
+              <Route path="/:id" component={TaskManager} />
+            </Switch>
+          </div>
+        </Router>
+      </CookieProvider>
+    </CurrentTeamProvider>
   );
 }
 

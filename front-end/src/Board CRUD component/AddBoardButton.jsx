@@ -2,9 +2,11 @@ import PropTypes from "prop-types";
 import "./AddBoardButton.css";
 import { useContext } from "react";
 import { CookieContext } from "../CookiesContext";
+import { CurrentTeamContext } from "../CurrentTeamContext";
 
 function AddBoardButton({ boards, setBoards }) {
   const [cookies] = useContext(CookieContext);
+  const [currTeamID] = useContext(CurrentTeamContext);
   const handleClick = () => {
     // to be changed:
     let boardName = prompt("Input board name", "New board");
@@ -29,6 +31,7 @@ function AddBoardButton({ boards, setBoards }) {
       method: "POST",
       body: JSON.stringify({
         name: boardName,
+        team_id: currTeamID,
       }),
       headers: {
         "Content-Type": "application/json",

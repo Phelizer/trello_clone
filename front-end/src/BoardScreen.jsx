@@ -2,6 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import BoardManager from "./Board CRUD component/BoardManager";
 import TeamManager from "./Teams/TeamManager";
 import { CookieContext } from "./CookiesContext";
+import { CurrentTeamContext } from "./CurrentTeamContext";
 
 const BoardScreen = () => {
   // needed for fetch error handling
@@ -16,6 +17,7 @@ const BoardScreen = () => {
   const [teams, setTeams] = useState([]);
 
   const [cookies] = useContext(CookieContext);
+  const [currTeamID, setCurrTeamID] = useContext(CurrentTeamContext);
 
   // function for retrieving teams from boards
   const getTeams = (boardArr) => {
@@ -56,13 +58,14 @@ const BoardScreen = () => {
           const teamArr = getTeams(result);
           setTeams(teamArr);
           setBoards(getBoardsOfFirstTeam(teamArr, result));
+          setCurrTeamID(teamArr[0].id);
         },
         (err) => {
           setIsLoaded(true);
           setError(err);
         }
       );
-  }, [cookies.JWT]);
+  }, [cookies.JWT, setCurrTeamID]);
 
   // fetch error handling
   if (error) {

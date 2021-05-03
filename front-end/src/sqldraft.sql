@@ -91,3 +91,6 @@ INSERT INTO users_tasks VALUES (3, 3);
 
 SELECT board_id, board_name, boards.team_id, team_name FROM teams_users LEFT JOIN boards ON teams_users.team_id = boards.team_id
 LEFT JOIN teams ON boards.team_id = teams.team_id WHERE user_id = 2;
+
+SELECT board_id, board_name, boards.team_id, team_name FROM boards LEFT JOIN teams
+ON boards.team_id = teams.team_id;
