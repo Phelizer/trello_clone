@@ -11,6 +11,7 @@ const BoardManager = ({ boards, setBoards, setAllBoards }) => (
         boards={boards}
         setBoards={setBoards}
         key={val.id}
+        setAllBoards={setAllBoards}
       />
     ))}
     <AddBoardButton setBoards={setBoards} setAllBoards={setAllBoards} />

@@ -8,7 +8,7 @@ import {
   Headers,
 } from '@nestjs/common';
 import { BoardsService } from './boards.service';
-import { JwtDecode, getToken } from '../auth/JWTdecode';
+import { JwtDecode, getUserIDFromToken } from '../auth/JWTdecode';
 
 @Controller('boards')
 export class BoardsController {
@@ -19,25 +19,31 @@ export class BoardsController {
   async addBoard(
     @Body('name') boardName: string,
     @Body('team_id') team_id: number,
+    @Headers('authorization') BearerToken: string,
   ) {
-    const boards = this.boardsService.addBoard(boardName, team_id);
-    return boards;
+    const user_id = getUserIDFromToken(BearerToken);
+
+    const boards = this.boardsService.addBoard(boardName, team_id, user_id);
+    return await boards;
   }
 
   // retrieving all the boards request handling
   @Get()
   async getAllBoards(@Headers('authorization') BearerToken: string) {
-    const token = getToken(BearerToken);
-    const decodedJWT = JwtDecode(token);
-    const user_id = decodedJWT.sub;
+    const user_id = getUserIDFromToken(BearerToken);
 
-    return await this.boardsService.getAllBoards(user_id);
+    return await this.boardsService.getBoardsOfUser(user_id);
   }
 
   // deleting a board request handling
   @Delete(':id')
-  removeBoard(@Param() idObj: { id: string }) {
+  async removeBoard(
+    @Param() idObj: { id: string },
+    @Headers('authorization') BearerToken: string,
+  ) {
+    const user_id = getUserIDFromToken(BearerToken);
+
     const id = parseInt(idObj.id);
-    return this.boardsService.removeBoard(id);
+    return await this.boardsService.removeBoard(id, user_id);
   }
 }

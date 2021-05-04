@@ -8,3 +8,11 @@ export const JwtDecode = (token: string) => {
 };
 
 export const getToken = (BearerToken: string) => BearerToken.split(' ')[1];
+
+export const getUserIDFromToken = (BearerToken: string) => {
+  const token = getToken(BearerToken);
+  const decodedJWT = JwtDecode(token);
+  const user_id = decodedJWT.sub;
+
+  return user_id;
+};

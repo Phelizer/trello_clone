@@ -35,7 +35,6 @@ const BoardScreen = () => {
 
   // fetching the list of boards
   useEffect(() => {
-    console.log("kal");
     const getBoardsOfFirstTeam = (teamArr, boardArr) => {
       // add handling for empty teams
       const boardsOfFirstTeam = boardArr.filter(

@@ -7,7 +7,11 @@ import { pool } from '../dbPool';
 export class BoardsService {
   private boards: Board[] = [];
 
-  async addBoard(name: string, team_id: number): Promise<Array<Board>> {
+  async addBoard(
+    name: string,
+    team_id: number,
+    user_id: number,
+  ): Promise<Array<ExtendedBoard>> {
     if (!name) {
       throw new Error('Invalid name');
     }
@@ -18,17 +22,13 @@ export class BoardsService {
       [name, team_id],
     );
 
-    // retrieving all the boards
-    const boardData = await pool.query(
-      'SELECT board_id, board_name, boards.team_id, team_name FROM boards LEFT JOIN teams ON boards.team_id = teams.team_id;',
-    );
-
-    const boards = this.convertToBoards(boardData.rows);
+    const boards = await this.getBoardsOfUser(user_id);
 
     return boards;
   }
 
-  async getAllBoards(user_id: number): Promise<Array<ExtendedBoard>> {
+  // getting all boards of the user
+  async getBoardsOfUser(user_id: number): Promise<Array<ExtendedBoard>> {
     const boards = await pool.query(
       'SELECT board_id, board_name, boards.team_id, team_name FROM teams_users LEFT JOIN boards ON teams_users.team_id = boards.team_id' +
         ' LEFT JOIN teams ON boards.team_id = teams.team_id WHERE user_id = $1;',
@@ -40,16 +40,17 @@ export class BoardsService {
     return extBoards;
   }
 
-  removeBoard(id: number): Array<Board> {
-    // error handling
-    const searchedBoard = this.boards.find((board) => board.id === id);
-    if (!searchedBoard) {
-      throw new NotFoundException('Could not find board');
-    }
+  async removeBoard(
+    board_id: number,
+    user_id: number,
+  ): Promise<ExtendedBoard[]> {
+    await pool.query('DELETE FROM boards WHERE board_id = $1 RETURNING *;', [
+      board_id,
+    ]);
 
-    // deleting the board
-    this.boards = this.boards.filter((board) => board.id !== id);
-    return this.boards;
+    const boards = await this.getBoardsOfUser(user_id);
+
+    return boards;
   }
 
   // converts array of plain objects from db
@@ -68,4 +69,18 @@ export class BoardsService {
 
     return extBoards;
   }
+
+  // getting all the boards
+  // async getAllBoards(): Promise<ExtendedBoard[]> {
+  //   // retrieving all the boards
+  //   const boardData = await pool.query(
+  //     'SELECT board_id, board_name, boards.team_id, team_name FROM boards LEFT JOIN teams ON boards.team_id = teams.team_id;',
+  //   );
+
+  //   //console.log(boardData.rows);
+
+  //   const boards = this.convertToBoards(boardData.rows);
+
+  //   return boards;
+  // }
 }

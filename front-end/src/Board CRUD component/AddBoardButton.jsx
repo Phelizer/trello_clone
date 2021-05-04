@@ -40,12 +40,10 @@ function AddBoardButton({ setBoards, setAllBoards }) {
     })
       .then((res) => res.json())
       .then((result) => {
-        console.log(result);
         setAllBoards(result);
         const newBoards = result.filter(
           (board) => board.team_id === currTeamID
         );
-        console.log(newBoards);
         setBoards(newBoards);
       });
   };
