@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { CookieContext } from "../CookiesContext";
 import { CurrentTeamContext } from "../CurrentTeamContext";
 
-function AddBoardButton({ boards, setBoards }) {
+function AddBoardButton({ setBoards, setAllBoards }) {
   const [cookies] = useContext(CookieContext);
   const [currTeamID] = useContext(CurrentTeamContext);
   const handleClick = () => {
@@ -40,7 +40,13 @@ function AddBoardButton({ boards, setBoards }) {
     })
       .then((res) => res.json())
       .then((result) => {
-        setBoards(result);
+        console.log(result);
+        setAllBoards(result);
+        const newBoards = result.filter(
+          (board) => board.team_id === currTeamID
+        );
+        console.log(newBoards);
+        setBoards(newBoards);
       });
   };
 
@@ -54,8 +60,8 @@ function AddBoardButton({ boards, setBoards }) {
 }
 
 AddBoardButton.propTypes = {
-  boards: PropTypes.arrayOf(PropTypes.object).isRequired,
   setBoards: PropTypes.func.isRequired,
+  setAllBoards: PropTypes.func.isRequired,
 };
 
 export default AddBoardButton;

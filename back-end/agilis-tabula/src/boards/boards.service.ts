@@ -12,22 +12,20 @@ export class BoardsService {
       throw new Error('Invalid name');
     }
 
+    // inserting new board
     await pool.query(
       'INSERT INTO boards (board_name, team_id) VALUES ($1, $2);',
       [name, team_id],
     );
 
-    const boards = await pool.query(
+    // retrieving all the boards
+    const boardData = await pool.query(
       'SELECT board_id, board_name, boards.team_id, team_name FROM boards LEFT JOIN teams ON boards.team_id = teams.team_id;',
     );
 
-    console.log(this.convertToBoards(boards.rows));
+    const boards = this.convertToBoards(boardData.rows);
 
-    // creating board
-    //const board = new Board(name, id);
-    //this.boards.push(board);
-
-    return this.boards;
+    return boards;
   }
 
   async getAllBoards(user_id: number): Promise<Array<ExtendedBoard>> {

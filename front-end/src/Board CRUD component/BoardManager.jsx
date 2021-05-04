@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import Board from "./Board";
 import AddBoardButton from "./AddBoardButton";
 
-const BoardManager = ({ boards, setBoards }) => (
+const BoardManager = ({ boards, setBoards, setAllBoards }) => (
   <div className="BoardManager">
     {boards.map((val) => (
       <Board
@@ -13,13 +13,14 @@ const BoardManager = ({ boards, setBoards }) => (
         key={val.id}
       />
     ))}
-    <AddBoardButton boards={boards} setBoards={setBoards} />
+    <AddBoardButton setBoards={setBoards} setAllBoards={setAllBoards} />
   </div>
 );
 
 BoardManager.propTypes = {
   boards: PropTypes.arrayOf(PropTypes.object).isRequired,
   setBoards: PropTypes.func.isRequired,
+  setAllBoards: PropTypes.func.isRequired,
 };
 
 export default BoardManager;

@@ -35,6 +35,7 @@ const BoardScreen = () => {
 
   // fetching the list of boards
   useEffect(() => {
+    console.log("kal");
     const getBoardsOfFirstTeam = (teamArr, boardArr) => {
       // add handling for empty teams
       const boardsOfFirstTeam = boardArr.filter(
@@ -65,7 +66,7 @@ const BoardScreen = () => {
           setError(err);
         }
       );
-  }, [cookies.JWT, setCurrTeamID]);
+  }, [cookies.JWT]);
 
   // fetch error handling
   if (error) {
@@ -83,7 +84,11 @@ const BoardScreen = () => {
         setBoards={setBoards}
         allBoards={allBoards}
       />
-      <BoardManager boards={boards} setBoards={setBoards} />
+      <BoardManager
+        boards={boards}
+        setBoards={setBoards}
+        setAllBoards={setAllBoards}
+      />
     </div>
   );
 };
