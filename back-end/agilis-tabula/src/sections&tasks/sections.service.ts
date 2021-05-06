@@ -6,25 +6,31 @@ import { pool } from '../dbPool';
 export class SectionsService {
   boardsToSections = {};
 
-  addSection(name: string, boardID: number): Section[] {
-    // generating a pseudo id
-    const id = Math.floor(Math.random() * (100000 - 0)) + 0;
+  async addSection(name: string, boardID: number): Promise<Section[]> {
+    // // generating a pseudo id
+    // const id = Math.floor(Math.random() * (100000 - 0)) + 0;
+    const existingSections = await this.getAllSections(boardID);
 
     // position calculating
     let maxPos = -1;
-    if (this.boardsToSections[boardID]) {
-      this.boardsToSections[boardID].forEach((sec) => {
-        if (sec.position > maxPos) maxPos = sec.position;
-      });
-    }
+    existingSections.forEach((sec) => {
+      if (sec.position > maxPos) maxPos = sec.position;
+    });
     const position = maxPos + 1;
 
     // adding new section
-    const section = new Section(name, id, position);
-    if (!this.boardsToSections[boardID]) this.boardsToSections[boardID] = [];
-    this.boardsToSections[boardID].push(section);
 
-    return this.boardsToSections[boardID];
+    await pool.query(
+      'INSERT INTO sections (section_name, position, board_id) VALUES ($1, $2, $3)',
+      [name, position, boardID],
+    );
+
+    const sections = await this.getAllSections(boardID);
+    // const section = new Section(name, id, position);
+    // if (!this.boardsToSections[boardID]) this.boardsToSections[boardID] = [];
+    // this.boardsToSections[boardID].push(section);
+
+    return sections;
   }
 
   async getAllSections(boardID: number): Promise<Section[]> {
@@ -32,12 +38,10 @@ export class SectionsService {
       'SELECT section_id, section_name, position FROM SECTIONS WHERE board_id = $1',
       [boardID],
     );
-    // console.log(sectionData);
+
     const classlessSections = sectionData.rows;
     const sections = this.convertToSections(classlessSections);
-    console.log(sections);
 
-    // console.log(sections);
     return sections;
   }
 

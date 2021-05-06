@@ -18,9 +18,12 @@ export class SectionsController {
   ) {}
 
   @Post(':boardID')
-  addSection(@Body('name') name: string, @Param() idObj: { boardID: string }) {
+  async addSection(
+    @Body('name') name: string,
+    @Param() idObj: { boardID: string },
+  ) {
     const boardID = parseInt(idObj.boardID);
-    const sections = this.sectionsService.addSection(name, boardID);
+    const sections = await this.sectionsService.addSection(name, boardID);
     return sections;
   }
 
