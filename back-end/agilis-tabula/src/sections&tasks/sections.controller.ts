@@ -25,9 +25,9 @@ export class SectionsController {
   }
 
   @Get(':boardID')
-  getAllSections(@Param() param: { boardID: string }) {
+  async getAllSections(@Param() param: { boardID: string }) {
     const boardID = parseInt(param.boardID);
-    const sections = this.sectionsService.getAllSections(boardID);
+    const sections = await this.sectionsService.getAllSections(boardID);
     const tasks = this.tasksService.getAllTasks(boardID);
 
     return { sections: sections, tasks: tasks };

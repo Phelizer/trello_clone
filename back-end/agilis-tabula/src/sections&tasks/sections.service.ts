@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Section } from './section.model';
+import { pool } from '../dbPool';
 
 @Injectable()
 export class SectionsService {
@@ -26,9 +27,18 @@ export class SectionsService {
     return this.boardsToSections[boardID];
   }
 
-  getAllSections(boardID: number): Section[] {
-    const sections = this.boardsToSections[boardID];
-    return sections ? sections : [];
+  async getAllSections(boardID: number): Promise<Section[]> {
+    const sectionData = await pool.query(
+      'SELECT section_id, section_name, position FROM SECTIONS WHERE board_id = $1',
+      [boardID],
+    );
+    // console.log(sectionData);
+    const classlessSections = sectionData.rows;
+    const sections = this.convertToSections(classlessSections);
+    console.log(sections);
+
+    // console.log(sections);
+    return sections;
   }
 
   removeSection(boardID: number, sectionID: number): Section[] {
@@ -114,5 +124,13 @@ export class SectionsService {
   // with such id
   boardExists(boardID: number): boolean {
     return this.boardsToSections[boardID] ? true : false;
+  }
+
+  convertToSections(sectionArr): Array<Section> {
+    const sections = sectionArr.map(
+      (sec) => new Section(sec.section_name, sec.section_id, sec.position),
+    );
+
+    return sections;
   }
 }

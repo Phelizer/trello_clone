@@ -8,7 +8,7 @@ import {
   Headers,
 } from '@nestjs/common';
 import { BoardsService } from './boards.service';
-import { JwtDecode, getUserIDFromToken } from '../auth/JWTdecode';
+import { getUserIDFromToken } from '../auth/JWTdecode';
 
 @Controller('boards')
 export class BoardsController {
