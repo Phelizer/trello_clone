@@ -21,6 +21,8 @@ export class BoardsController {
     @Body('team_id') team_id: number,
     @Headers('authorization') BearerToken: string,
   ) {
+    console.log('test');
+
     const user_id = getUserIDFromToken(BearerToken);
 
     const boards = this.boardsService.addBoard(boardName, team_id, user_id);
