@@ -7,8 +7,6 @@ export class SectionsService {
   boardsToSections = {};
 
   async addSection(name: string, boardID: number): Promise<Section[]> {
-    // // generating a pseudo id
-    // const id = Math.floor(Math.random() * (100000 - 0)) + 0;
     const existingSections = await this.getAllSections(boardID);
 
     // position calculating
@@ -19,16 +17,12 @@ export class SectionsService {
     const position = maxPos + 1;
 
     // adding new section
-
     await pool.query(
       'INSERT INTO sections (section_name, position, board_id) VALUES ($1, $2, $3)',
       [name, position, boardID],
     );
 
     const sections = await this.getAllSections(boardID);
-    // const section = new Section(name, id, position);
-    // if (!this.boardsToSections[boardID]) this.boardsToSections[boardID] = [];
-    // this.boardsToSections[boardID].push(section);
 
     return sections;
   }
@@ -45,30 +39,20 @@ export class SectionsService {
     return sections;
   }
 
-  removeSection(boardID: number, sectionID: number): Section[] {
-    // error handling
-    if (!this.sectionExists(boardID, sectionID))
-      throw new NotFoundException('Could not find section with such ID');
-
-    const deletedSec = this.boardsToSections[boardID].find(
-      (sec: Section) => sec.id === sectionID,
+  async removeSection(boardID: number, sectionID: number): Promise<Section[]> {
+    const deletedPosData = await pool.query(
+      'SELECT position FROM sections WHERE section_id = $1',
+      [sectionID],
     );
+    const deletedPos = deletedPosData.rows[0].position;
+    await pool.query('DELETE FROM sections WHERE section_id = $1', [sectionID]);
+    await pool.query('SELECT fixSectionPositions($1, $2)', [
+      boardID,
+      deletedPos,
+    ]);
+    const sections = await this.getAllSections(boardID);
 
-    const deletedPos = deletedSec.position;
-
-    const sectionsToUpdate = this.boardsToSections[boardID].filter(
-      (sec: Section) => sec.position > deletedPos,
-    );
-
-    // updating positions of all the affected sections
-    for (const sec of sectionsToUpdate) sec.position--;
-
-    // deleting the section
-    this.boardsToSections[boardID] = this.boardsToSections[boardID].filter(
-      (sec: Section) => sec.id !== sectionID,
-    );
-
-    return this.boardsToSections[boardID];
+    return sections;
   }
 
   changePosition(

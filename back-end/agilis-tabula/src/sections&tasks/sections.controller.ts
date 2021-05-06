@@ -37,10 +37,10 @@ export class SectionsController {
   }
 
   @Delete(':boardID/:sectionID')
-  removeSection(@Param() param: { boardID: string; sectionID: string }) {
+  async removeSection(@Param() param: { boardID: string; sectionID: string }) {
     const boardID = parseInt(param.boardID);
     const sectionID = parseInt(param.sectionID);
-    return this.sectionsService.removeSection(boardID, sectionID);
+    return await this.sectionsService.removeSection(boardID, sectionID);
   }
 
   @Patch(':boardID/:sectionID')

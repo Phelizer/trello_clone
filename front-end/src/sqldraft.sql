@@ -94,3 +94,19 @@ LEFT JOIN teams ON boards.team_id = teams.team_id WHERE user_id = 2;
 
 SELECT board_id, board_name, boards.team_id, team_name FROM boards LEFT JOIN teams
 ON boards.team_id = teams.team_id;
+
+CREATE FUNCTION fixSectionPositions(boardID INTEGER, deletedPos INTEGER) RETURNS void AS $$
+declare
+  section record;
+begin
+  for section in SELECT section_id, section_name, position FROM SECTIONS WHERE board_id = boardID
+  loop
+    if section.position > deletedPos then
+      UPDATE sections
+      SET position = section.position - 1
+      WHERE section_id = section.section_id;
+    end if;
+  end loop;
+end;
+
+$$ LANGUAGE plpgsql;
