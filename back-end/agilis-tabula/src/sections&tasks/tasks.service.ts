@@ -42,17 +42,19 @@ export class TasksService {
     return tasks;
   }
 
-  changeSection(boardID: number, taskID: number, newSec: number): Task[] {
-    // error handling
-    if (!this.taskExists(boardID, taskID))
-      throw new NotFoundException('Could not find task with such ID');
+  async changeSection(
+    boardID: number,
+    taskID: number,
+    newSec: number,
+  ): Promise<Task[]> {
+    await pool.query('UPDATE tasks SET section_id = $1 WHERE task_id = $2', [
+      newSec,
+      taskID,
+    ]);
 
-    const searchedTask = this.boardsToTasks[boardID].find(
-      (task) => task.id === taskID,
-    );
+    const tasks = await this.getAllTasks(boardID);
 
-    searchedTask.section = newSec;
-    return this.boardsToTasks[boardID];
+    return tasks;
   }
 
   // TO be done: changePriority

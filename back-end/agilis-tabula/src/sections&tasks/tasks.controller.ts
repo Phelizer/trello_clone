@@ -26,13 +26,13 @@ export class TasksController {
   }
 
   @Patch(':boardID/:taskID')
-  changeSection(
+  async changeSection(
     @Param() param: { boardID: string; taskID: string },
     @Body('newSection') newSection: number,
   ) {
     const boardID = parseInt(param.boardID);
     const taskID = parseInt(param.taskID);
 
-    return this.tasksService.changeSection(boardID, taskID, newSection);
+    return await this.tasksService.changeSection(boardID, taskID, newSection);
   }
 }
