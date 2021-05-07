@@ -4,8 +4,6 @@ import { pool } from '../dbPool';
 
 @Injectable()
 export class SectionsService {
-  boardsToSections = {};
-
   async addSection(name: string, boardID: number): Promise<Section[]> {
     const existingSections = await this.getAllSections(boardID);
 

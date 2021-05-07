@@ -18,11 +18,11 @@ export class TasksController {
   }
 
   @Delete(':boardID/:taskID')
-  removeTask(@Param() param: { boardID: string; taskID: string }) {
+  async removeTask(@Param() param: { boardID: string; taskID: string }) {
     const boardID = parseInt(param.boardID);
     const taskID = parseInt(param.taskID);
 
-    return this.tasksService.removeTask(boardID, taskID);
+    return await this.tasksService.removeTask(boardID, taskID);
   }
 
   @Patch(':boardID/:taskID')

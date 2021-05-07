@@ -35,16 +35,11 @@ export class TasksService {
     return tasks;
   }
 
-  removeTask(boardID: number, taskID: number): Task[] {
-    // error handling
-    if (!this.taskExists(boardID, taskID))
-      throw new NotFoundException('Could not find task with such ID');
+  async removeTask(boardID: number, taskID: number): Promise<Task[]> {
+    await pool.query('DELETE FROM tasks WHERE task_id = $1', [taskID]);
+    const tasks = await this.getAllTasks(boardID);
 
-    this.boardsToTasks[boardID] = this.boardsToTasks[boardID].filter(
-      (task) => task.id !== taskID,
-    );
-
-    return this.boardsToTasks[boardID];
+    return tasks;
   }
 
   changeSection(boardID: number, taskID: number, newSec: number): Task[] {
