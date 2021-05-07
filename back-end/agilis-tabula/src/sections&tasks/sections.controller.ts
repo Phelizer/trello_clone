@@ -44,7 +44,7 @@ export class SectionsController {
   }
 
   @Patch(':boardID/:sectionID')
-  changeSectionPosition(
+  async changeSectionPosition(
     @Param() param: { boardID: string; sectionID: string },
     @Body('newPosition') newPos: number,
   ) {

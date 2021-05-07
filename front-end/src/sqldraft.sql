@@ -110,3 +110,49 @@ begin
 end;
 
 $$ LANGUAGE plpgsql;
+
+-- CREATE FUNCTION changeSectionPositions(boardID INTEGER, sectionID INTEGER, newPos INTEGER) RETURNS void AS $$
+-- declare
+--   searchedSection record;
+--   currPos integer;
+--   section record;
+-- begin
+--   searchedSection = SELECT * FROM section WHERE section_id = sectionID;
+--   currPos = searchedSection.position;
+--   for section in SELECT * FROM SECTIONS WHERE board_id = boardID
+--   loop
+--     if section.position >= newPos AND section.position < currPos
+--       UPDATE sections
+--       SET position = section.position + 1
+--       WHERE
+--   end loop;
+-- end;
+-- && LANGUAGE plpgsql;
+
+CREATE FUNCTION changeSectionPositions(boardID INTEGER, sectionID INTEGER, newPos INTEGER) RETURNS void AS $$
+declare
+  searchedSection record;
+  currPos integer;
+  section record;
+begin
+  searchedSection = SELECT * FROM section WHERE section_id = sectionID;
+  currPos = searchedSection.position;
+
+    UPDATE sections
+    SET position = position + 1
+    WHERE position >= newPos AND position < currPos;
+
+    UPDATE sections
+    SET position = section.position - 1
+    WHERE position <= newPos AND position > currPos;
+
+end;
+&& LANGUAGE plpgsql;
+
+    UPDATE sections
+    SET position = position + 1
+    WHERE position >= 1 AND position < 3;
+
+    UPDATE sections
+    SET position = position - 1
+    WHERE position <= 1 AND position > 3;
