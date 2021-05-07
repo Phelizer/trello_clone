@@ -10,6 +10,6 @@ Technological stack:
 
 Mockup: https://balsamiq.cloud/s9y57fq/ptih5ps/r2278
 
-ER: https://ibb.co/vHv4tqt
+ER: https://ibb.co/LNz8SPH
 
 Use Cases: https://ibb.co/09m7BsY
