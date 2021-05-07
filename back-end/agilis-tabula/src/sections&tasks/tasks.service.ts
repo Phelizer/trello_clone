@@ -6,42 +6,30 @@ import { pool } from '../dbPool';
 export class TasksService {
   boardsToTasks = {};
 
-  addTask(
+  async addTask(
     name: string,
     boardID: number,
     sectionID: number,
     priority: number,
-  ): Task[] {
-    // generating a pseudo id
-    const id = Math.floor(Math.random() * (100000 - 0)) + 0;
-
+  ): Promise<Task[]> {
     // generating timestamp
     const timestamp = new Date().getTime();
 
-    // default initial value for executors array
-    const executorIDArr = [];
-
-    const task = new Task(
-      name,
-      id,
-      sectionID,
-      priority,
-      timestamp,
-      executorIDArr,
+    await pool.query(
+      'INSERT INTO tasks (task_name, section_id, priority, task_timestamp, board_id) VALUES ($1, $2, $3, $4, $5);',
+      [name, sectionID, priority, timestamp, boardID],
     );
 
-    if (!this.boardsToTasks[boardID]) this.boardsToTasks[boardID] = [];
-    this.boardsToTasks[boardID].push(task);
+    const tasks = this.getAllTasks(boardID);
 
-    return this.boardsToTasks[boardID];
+    return tasks;
   }
 
   async getAllTasks(boardID: number): Promise<Task[]> {
     const taskData = await pool.query(
-      'SELECT task_id, task_name, section_id, priority, timestamp FROM tasks WHERE board_id = $1',
+      'SELECT task_id, task_name, section_id, priority, task_timestamp FROM tasks WHERE board_id = $1',
       [boardID],
     );
-
     const tasks = this.convertToTasks(taskData.rows);
 
     return tasks;

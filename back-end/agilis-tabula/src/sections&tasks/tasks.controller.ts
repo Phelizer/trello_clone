@@ -6,7 +6,7 @@ export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Post(':boardID/:sectionID')
-  addTask(
+  async addTask(
     @Body('name') name: string,
     @Body('priority') priority: number,
     @Param() param: { boardID: string; sectionID: string },
@@ -14,7 +14,7 @@ export class TasksController {
     const boardID = parseInt(param.boardID);
     const sectionID = parseInt(param.sectionID);
 
-    return this.tasksService.addTask(name, boardID, sectionID, priority);
+    return await this.tasksService.addTask(name, boardID, sectionID, priority);
   }
 
   @Delete(':boardID/:taskID')
