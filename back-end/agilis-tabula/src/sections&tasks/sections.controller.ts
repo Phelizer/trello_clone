@@ -30,8 +30,11 @@ export class SectionsController {
   @Get(':boardID')
   async getAllSections(@Param() param: { boardID: string }) {
     const boardID = parseInt(param.boardID);
-    const sections = await this.sectionsService.getAllSections(boardID);
-    const tasks = this.tasksService.getAllTasks(boardID);
+
+    const [sections, tasks] = await Promise.all([
+      this.sectionsService.getAllSections(boardID),
+      this.tasksService.getAllTasks(boardID),
+    ]);
 
     return { sections: sections, tasks: tasks };
   }
@@ -50,6 +53,10 @@ export class SectionsController {
   ) {
     const boardID = parseInt(param.boardID);
     const sectionID = parseInt(param.sectionID);
-    return this.sectionsService.changePosition(boardID, sectionID, newPos);
+    return await this.sectionsService.changePosition(
+      boardID,
+      sectionID,
+      newPos,
+    );
   }
 }

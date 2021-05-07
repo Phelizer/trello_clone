@@ -66,7 +66,6 @@ export class SectionsService {
     );
 
     const currPos = searchedSection.rows[0].position;
-    console.log(currPos);
 
     // fixing positions
     await pool.query(

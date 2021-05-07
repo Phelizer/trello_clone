@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Task } from './task.model';
+import { pool } from '../dbPool';
 
 @Injectable()
 export class TasksService {
@@ -35,9 +36,15 @@ export class TasksService {
     return this.boardsToTasks[boardID];
   }
 
-  getAllTasks(boardID: number): Task[] {
-    const tasks = this.boardsToTasks[boardID];
-    return tasks ? tasks : [];
+  async getAllTasks(boardID: number): Promise<Task[]> {
+    const taskData = await pool.query(
+      'SELECT task_id, task_name, section_id, priority, timestamp FROM tasks WHERE board_id = $1',
+      [boardID],
+    );
+
+    const tasks = this.convertToTasks(taskData.rows);
+
+    return tasks;
   }
 
   removeTask(boardID: number, taskID: number): Task[] {
@@ -87,5 +94,20 @@ export class TasksService {
   // with such id
   boardExists(boardID: number): boolean {
     return this.boardsToTasks[boardID] ? true : false;
+  }
+
+  convertToTasks(taskArr): Task[] {
+    const tasks = taskArr.map(
+      (task) =>
+        new Task(
+          task.task_name,
+          task.task_id,
+          task.section_id,
+          task.priority,
+          task.timestamp,
+          [],
+        ),
+    );
+    return tasks;
   }
 }
