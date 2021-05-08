@@ -48,6 +48,14 @@ function AddBoardButton({ setBoards, setAllBoards }) {
       });
   };
 
+  if (currTeamID === null) {
+    return (
+      <div className="AddBoardButtonPlaceholder">
+        To create boards you need to first create team
+      </div>
+    );
+  }
+
   return (
     <div className="AddBoardButton">
       <button type="button" onClick={handleClick}>
