@@ -63,24 +63,6 @@ export class TasksService {
 
   // error handling utils
 
-  // this function checks it there is a task in DB
-  // with such id
-  taskExists(boardID: number, taskID: number): boolean {
-    if (!this.boardExists(boardID))
-      throw new NotFoundException('Could not find board with such ID');
-
-    const searchedTask = this.boardsToTasks[boardID].find(
-      (task) => task.id === taskID,
-    );
-    return searchedTask ? true : false;
-  }
-
-  // this function checks it there is a board in DB
-  // with such id
-  boardExists(boardID: number): boolean {
-    return this.boardsToTasks[boardID] ? true : false;
-  }
-
   convertToTasks(taskArr): Task[] {
     const tasks = taskArr.map(
       (task) =>
