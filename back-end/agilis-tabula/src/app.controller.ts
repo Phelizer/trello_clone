@@ -15,9 +15,7 @@ export class AppController {
   @UseGuards(LocalAuthGuard)
   @Post('auth/login')
   async login(@Request() req) {
-    console.log(req.user);
-
-    return this.authService.login(req.user);
+    return await this.authService.login(req.user);
   }
 
   @Public()
@@ -25,7 +23,8 @@ export class AppController {
   async signup(@Body() body) {
     const { username, email, password } = body;
     const user = await this.usersService.createUser(username, email, password);
+    const JWT = await this.authService.login(user);
 
-    return this.authService.login(user);
+    return JWT;
   }
 }

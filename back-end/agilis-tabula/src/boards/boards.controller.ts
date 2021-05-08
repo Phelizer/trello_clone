@@ -21,7 +21,7 @@ export class BoardsController {
     @Body('team_id') team_id: number,
     @Headers('authorization') BearerToken: string,
   ) {
-    console.log('test');
+    console.log(team_id);
 
     const user_id = getUserIDFromToken(BearerToken);
 

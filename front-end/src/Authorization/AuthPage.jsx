@@ -24,8 +24,6 @@ const AuthPage = () => {
     })
       .then((res) => res.json())
       .then((result) => {
-        console.log("Result: ", result);
-        console.log("tok: ", result.access_token);
         if (result.access_token) {
           const JWT = result.access_token;
           setCookie("JWT", JWT, { path: "/" });

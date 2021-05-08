@@ -58,7 +58,8 @@ const BoardScreen = () => {
           const teamArr = getTeams(result);
           setTeams(teamArr);
           setBoards(getBoardsOfFirstTeam(teamArr, result));
-          setCurrTeamID(teamArr[0].id);
+          if (teamArr[0]) setCurrTeamID(teamArr[0].id);
+          else setCurrTeamID(null);
         },
         (err) => {
           setIsLoaded(true);
