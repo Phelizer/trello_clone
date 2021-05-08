@@ -24,9 +24,15 @@ const AuthPage = () => {
     })
       .then((res) => res.json())
       .then((result) => {
-        const JWT = result.access_token;
-        setCookie("JWT", JWT, { path: "/" });
-        history.push("/boards");
+        console.log("Result: ", result);
+        console.log("tok: ", result.access_token);
+        if (result.access_token) {
+          const JWT = result.access_token;
+          setCookie("JWT", JWT, { path: "/" });
+          history.push("/boards");
+        } else {
+          alert("Login or password is invalid. Try again.");
+        }
       });
   };
   const loginChangeHandler = (e) => {
