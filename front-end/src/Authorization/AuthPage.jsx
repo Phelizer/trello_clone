@@ -64,6 +64,15 @@ const AuthPage = () => {
         </label>
         <input type="submit" value="Sign in" />
       </form>
+      <p>OR</p>
+      <button
+        type="button"
+        onClick={() => {
+          history.push("/signup");
+        }}
+      >
+        Create account
+      </button>
     </div>
   );
 };
