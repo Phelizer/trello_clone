@@ -21,7 +21,16 @@ const SignUpPage = () => {
     setCurrEmail(e.target.value);
   };
 
-  const submitHandler = () => {};
+  const submitHandler = () => {
+    const pwsAreEquals = currPassword === currConfPassword;
+    if (currUsername && currEmail && currPassword && pwsAreEquals) {
+      console.log("cool");
+    } else if (!currUsername) alert("Input username");
+    else if (!currPassword) alert("Input password");
+    else if (!currEmail) alert("Input email");
+    else if (!pwsAreEquals) alert("Your passwords are not equal");
+  };
+
   return (
     <div className="SignUpPage">
       <form onSubmit={submitHandler}>
