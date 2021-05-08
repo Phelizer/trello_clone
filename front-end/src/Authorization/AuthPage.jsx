@@ -24,9 +24,13 @@ const AuthPage = () => {
     })
       .then((res) => res.json())
       .then((result) => {
-        const JWT = result.access_token;
-        setCookie("JWT", JWT, { path: "/" });
-        history.push("/boards");
+        if (result.access_token) {
+          const JWT = result.access_token;
+          setCookie("JWT", JWT, { path: "/" });
+          history.push("/boards");
+        } else {
+          alert("Login or password is invalid. Try again.");
+        }
       });
   };
   const loginChangeHandler = (e) => {
@@ -58,6 +62,15 @@ const AuthPage = () => {
         </label>
         <input type="submit" value="Sign in" />
       </form>
+      <p>OR</p>
+      <button
+        type="button"
+        onClick={() => {
+          history.push("/signup");
+        }}
+      >
+        Create account
+      </button>
     </div>
   );
 };
