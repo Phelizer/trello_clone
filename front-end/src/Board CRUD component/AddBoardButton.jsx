@@ -1,10 +1,10 @@
-import PropTypes from "prop-types";
+import PropTypes, { any } from "prop-types";
 import "./AddBoardButton.css";
 import { useContext } from "react";
 import { CookieContext } from "../CookiesContext";
 import { CurrentTeamContext } from "../CurrentTeamContext";
 
-function AddBoardButton({ setBoards, setAllBoards }) {
+function AddBoardButton({ setBoards, setAllBoards, socket }) {
   const [cookies] = useContext(CookieContext);
   const [currTeamID] = useContext(CurrentTeamContext);
   const handleClick = () => {
@@ -45,6 +45,8 @@ function AddBoardButton({ setBoards, setAllBoards }) {
           (board) => board.team_id === currTeamID
         );
         setBoards(newBoards);
+
+        socket.emit("board_update");
       });
   };
 
@@ -68,6 +70,8 @@ function AddBoardButton({ setBoards, setAllBoards }) {
 AddBoardButton.propTypes = {
   setBoards: PropTypes.func.isRequired,
   setAllBoards: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  socket: PropTypes.object.isRequired,
 };
 
 export default AddBoardButton;

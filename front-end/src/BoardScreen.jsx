@@ -1,8 +1,11 @@
 import { useEffect, useState, useContext } from "react";
+
 import BoardManager from "./Board CRUD component/BoardManager";
 import TeamManager from "./Teams/TeamManager";
 import { CookieContext } from "./CookiesContext";
 import { CurrentTeamContext } from "./CurrentTeamContext";
+
+//
 
 const BoardScreen = () => {
   // needed for fetch error handling
@@ -58,8 +61,9 @@ const BoardScreen = () => {
           const teamArr = getTeams(result);
           setTeams(teamArr);
           setBoards(getBoardsOfFirstTeam(teamArr, result));
-          if (teamArr[0]) setCurrTeamID(teamArr[0].id);
-          else setCurrTeamID(null);
+          if (teamArr[0]) {
+            setCurrTeamID(teamArr[0].id);
+          } else setCurrTeamID(null);
         },
         (err) => {
           setIsLoaded(true);
@@ -88,6 +92,7 @@ const BoardScreen = () => {
         boards={boards}
         setBoards={setBoards}
         setAllBoards={setAllBoards}
+        allBoards={allBoards}
       />
     </div>
   );

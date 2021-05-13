@@ -3,7 +3,14 @@ import "./Board.css";
 import { Link } from "react-router-dom";
 import DeleteBoardButton from "./DeleteBoardButton";
 
-const Board = ({ boardName, boardID, boards, setBoards, setAllBoards }) => (
+const Board = ({
+  boardName,
+  boardID,
+  boards,
+  setBoards,
+  setAllBoards,
+  socket,
+}) => (
   <div className="Board">
     <Link to={`/${boardID}`}>
       <div id="BoardName">{boardName}</div>
@@ -13,6 +20,7 @@ const Board = ({ boardName, boardID, boards, setBoards, setAllBoards }) => (
       boards={boards}
       setBoards={setBoards}
       setAllBoards={setAllBoards}
+      socket={socket}
     />
   </div>
 );
@@ -24,6 +32,8 @@ Board.propTypes = {
   boards: PropTypes.arrayOf(PropTypes.object).isRequired,
   setBoards: PropTypes.func.isRequired,
   setAllBoards: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  socket: PropTypes.object.isRequired,
 };
 
 export default Board;

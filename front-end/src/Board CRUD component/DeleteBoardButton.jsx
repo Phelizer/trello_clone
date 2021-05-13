@@ -4,7 +4,13 @@ import { useContext } from "react";
 import { CookieContext } from "../CookiesContext";
 import { CurrentTeamContext } from "../CurrentTeamContext";
 
-function DeleteBoardButton({ boardID, boards, setBoards, setAllBoards }) {
+function DeleteBoardButton({
+  boardID,
+  boards,
+  setBoards,
+  setAllBoards,
+  socket,
+}) {
   const [cookies] = useContext(CookieContext);
   const [currTeamID] = useContext(CurrentTeamContext);
 
@@ -35,6 +41,7 @@ function DeleteBoardButton({ boardID, boards, setBoards, setAllBoards }) {
           (board) => board.team_id === currTeamID
         );
         setBoards(newBoards);
+        socket.emit("board_update");
       });
     // TODO: fetch error handling to be done
   };
@@ -52,6 +59,8 @@ DeleteBoardButton.propTypes = {
   boards: PropTypes.arrayOf(PropTypes.object).isRequired,
   setBoards: PropTypes.func.isRequired,
   setAllBoards: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  socket: PropTypes.object.isRequired,
 };
 
 export default DeleteBoardButton;
