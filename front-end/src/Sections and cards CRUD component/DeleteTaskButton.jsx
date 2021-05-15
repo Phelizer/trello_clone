@@ -2,15 +2,18 @@ import PropTypes from "prop-types";
 import { useContext } from "react";
 import { getPath } from "../Utils/Utils";
 import { CookieContext } from "../CookiesContext";
+import { SocketContext } from "../SocketContext";
 
 const DeleteTaskButton = ({ taskID, tasks, setTasks }) => {
   const [cookies] = useContext(CookieContext);
+  const { getConnection } = useContext(SocketContext);
 
   const handleClick = () => {
     // get array of path elements
     const path = getPath(window);
+    const boardID = path[0];
 
-    const url = `http://localhost:3000/task/${path[0]}/${taskID}`;
+    const url = `http://localhost:3000/task/${boardID}/${taskID}`;
     fetch(url, {
       method: "DELETE",
       headers: {
@@ -28,6 +31,8 @@ const DeleteTaskButton = ({ taskID, tasks, setTasks }) => {
         }
 
         setTasks(result);
+        const socket = getConnection();
+        socket.emit("in-board_update", boardID);
       });
   };
 
