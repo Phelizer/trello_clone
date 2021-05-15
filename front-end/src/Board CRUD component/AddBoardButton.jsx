@@ -8,7 +8,7 @@ import { SocketContext } from "../SocketContext";
 function AddBoardButton({ setBoards, setAllBoards }) {
   const [cookies] = useContext(CookieContext);
   const [currTeamID] = useContext(CurrentTeamContext);
-  const [getConnection] = useContext(SocketContext);
+  const { getConnection } = useContext(SocketContext);
 
   const handleClick = () => {
     // to be changed:

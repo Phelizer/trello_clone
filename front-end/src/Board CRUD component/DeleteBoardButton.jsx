@@ -8,7 +8,7 @@ import { SocketContext } from "../SocketContext";
 function DeleteBoardButton({ boardID, boards, setBoards, setAllBoards }) {
   const [cookies] = useContext(CookieContext);
   const [currTeamID] = useContext(CurrentTeamContext);
-  const [getConnection] = useContext(SocketContext);
+  const { getConnection } = useContext(SocketContext);
 
   const handleClick = () => {
     const url = `http://localhost:3000/boards/${boardID}`;

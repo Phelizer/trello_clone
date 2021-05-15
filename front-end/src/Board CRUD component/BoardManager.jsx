@@ -7,7 +7,7 @@ import { SocketContext } from "../SocketContext";
 
 const BoardManager = ({ boards, setBoards, allBoards, setAllBoards }) => {
   const [currTeamID] = useContext(CurrentTeamContext);
-  const [getConnection, subscribeToBoardUpdate, unsubscribeFrom] = useContext(
+  const { getConnection, subscribeToBoardUpdate, unsubscribeFrom } = useContext(
     SocketContext
   );
 

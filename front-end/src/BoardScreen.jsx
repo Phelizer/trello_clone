@@ -57,12 +57,9 @@ const BoardScreen = () => {
       .then((res) => res.json())
       .then(
         (result) => {
-          // eslint-disable-next-line func-names
-          console.log(result);
           const { boards: boardArr, teams: teamArr } = result;
           setIsLoaded(true);
           setAllBoards(boardArr);
-          // const teamArr = getTeams(result);
           setTeams(teamArr);
           setBoards(getBoardsOfFirstTeam(teamArr, boardArr));
           if (teamArr[0]) {

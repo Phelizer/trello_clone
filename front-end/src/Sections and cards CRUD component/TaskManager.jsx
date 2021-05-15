@@ -4,6 +4,7 @@ import Section from "./Section";
 import AddSectionButton from "./AddSectionButton";
 import { getPath } from "../Utils/Utils";
 import { CookieContext } from "../CookiesContext";
+import { SocketContext } from "../SocketContext";
 
 const TaskManager = () => {
   // needed for fetch error handling
@@ -17,12 +18,23 @@ const TaskManager = () => {
 
   const [cookies] = useContext(CookieContext);
 
+  const {
+    getConnection,
+    subscribeToInBoardUpdate,
+    unsubscribeFrom,
+  } = useContext(SocketContext);
+
   // fetching the list of sections
   useEffect(() => {
     // get array of path elements
     const path = getPath(window);
+    const boardID = path[0];
 
-    fetch(`http://localhost:3000/board/${path[0]}`, {
+    // subscribing to in-board updates
+    const socket = getConnection();
+    subscribeToInBoardUpdate(socket, boardID, setTasks, setSections);
+
+    fetch(`http://localhost:3000/board/${boardID}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${cookies.JWT}`,
@@ -40,6 +52,10 @@ const TaskManager = () => {
           setError(err);
         }
       );
+    // unsubscribing
+    return () => {
+      unsubscribeFrom("in-board_update", socket);
+    };
   }, [cookies.JWT]);
 
   // fetch error handling
@@ -81,6 +97,8 @@ const TaskManager = () => {
       .then((res) => res.json())
       .then((result) => {
         setSections(result);
+        const socket = getConnection();
+        socket.emit("in-board_update", boardID);
       });
   };
 
@@ -120,6 +138,8 @@ const TaskManager = () => {
       .then((res) => res.json())
       .then((result) => {
         setTasks(result);
+        const socket = getConnection();
+        socket.emit("in-board_update", boardID);
       });
   };
 
