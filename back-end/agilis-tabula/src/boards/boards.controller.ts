@@ -32,7 +32,11 @@ export class BoardsController {
   async getAllBoards(@Headers('authorization') BearerToken: string) {
     const user_id = getUserIDFromToken(BearerToken);
 
-    return await this.boardsService.getBoardsOfUser(user_id);
+    const boardsPromise = this.boardsService.getBoardsOfUser(user_id);
+    const teamsPromise = this.boardsService.getTeams(user_id);
+    const [boards, teams] = await Promise.all([boardsPromise, teamsPromise]);
+
+    return { boards, teams };
   }
 
   // deleting a board request handling

@@ -29,15 +29,27 @@ export class BoardsService {
 
   // getting all boards of the user
   async getBoardsOfUser(user_id: number): Promise<Array<ExtendedBoard>> {
-    const boards = await pool.query(
-      'SELECT board_id, board_name, boards.team_id, team_name FROM teams_users LEFT JOIN boards ON teams_users.team_id = boards.team_id' +
+    const boardsData = await pool.query(
+      'SELECT board_id, board_name, boards.team_id, team_name FROM teams_users JOIN boards ON teams_users.team_id = boards.team_id' +
         ' LEFT JOIN teams ON boards.team_id = teams.team_id WHERE user_id = $1;',
       [user_id],
     );
 
-    const extBoards = this.convertToBoards(boards.rows);
+    const extBoards = this.convertToBoards(boardsData.rows);
 
     return extBoards;
+  }
+
+  async getTeams(user_id: number): Promise<Array<any>> {
+    const teamsData = await pool.query(
+      'SELECT team_name, teams.team_id FROM teams_users LEFT JOIN teams ON teams_users.team_id = teams.team_id WHERE user_id = $1',
+      [user_id],
+    );
+    const teams = teamsData.rows.map((team) => ({
+      name: team.team_name,
+      id: team.team_id,
+    }));
+    return teams;
   }
 
   async removeBoard(

@@ -22,17 +22,20 @@ const BoardScreen = () => {
 
   // function for retrieving teams from boards
   const getTeams = (boardArr) => {
+    console.log(boardArr);
     const duplicatedTeams = [];
     boardArr.forEach((board) => {
       const team = { name: board.team_name, id: board.team_id };
       duplicatedTeams.push(team);
     });
+    console.log(duplicatedTeams);
     const uniqueTeams = duplicatedTeams.filter(
       (v, i, a) => a.findIndex((t) => t.id === v.id) === i
     );
-    const notEmptyTeams = uniqueTeams.filter((team) => team.id);
+    console.log(uniqueTeams);
+    // const notEmptyTeams = uniqueTeams.filter((team) => team.id);
 
-    return notEmptyTeams;
+    return uniqueTeams;
   };
 
   // fetching the list of boards
@@ -55,11 +58,13 @@ const BoardScreen = () => {
       .then(
         (result) => {
           // eslint-disable-next-line func-names
+          console.log(result);
+          const { boards: boardArr, teams: teamArr } = result;
           setIsLoaded(true);
-          setAllBoards(result);
-          const teamArr = getTeams(result);
+          setAllBoards(boardArr);
+          // const teamArr = getTeams(result);
           setTeams(teamArr);
-          setBoards(getBoardsOfFirstTeam(teamArr, result));
+          setBoards(getBoardsOfFirstTeam(teamArr, boardArr));
           if (teamArr[0]) {
             setCurrTeamID(teamArr[0].id);
           } else setCurrTeamID(null);
