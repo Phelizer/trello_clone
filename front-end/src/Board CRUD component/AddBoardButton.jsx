@@ -1,12 +1,15 @@
-import PropTypes, { any } from "prop-types";
+import PropTypes from "prop-types";
 import "./AddBoardButton.css";
 import { useContext } from "react";
 import { CookieContext } from "../CookiesContext";
 import { CurrentTeamContext } from "../CurrentTeamContext";
+import { SocketContext } from "../SocketContext";
 
-function AddBoardButton({ setBoards, setAllBoards, socket }) {
+function AddBoardButton({ setBoards, setAllBoards }) {
   const [cookies] = useContext(CookieContext);
   const [currTeamID] = useContext(CurrentTeamContext);
+  const [getConnection] = useContext(SocketContext);
+
   const handleClick = () => {
     // to be changed:
     let boardName = prompt("Input board name", "New board");
@@ -46,7 +49,8 @@ function AddBoardButton({ setBoards, setAllBoards, socket }) {
         );
         setBoards(newBoards);
 
-        socket.emit("board_update");
+        const socket = getConnection();
+        socket.emit("board_update", currTeamID);
       });
   };
 
@@ -70,8 +74,6 @@ function AddBoardButton({ setBoards, setAllBoards, socket }) {
 AddBoardButton.propTypes = {
   setBoards: PropTypes.func.isRequired,
   setAllBoards: PropTypes.func.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  socket: PropTypes.object.isRequired,
 };
 
 export default AddBoardButton;

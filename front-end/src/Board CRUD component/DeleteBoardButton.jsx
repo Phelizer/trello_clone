@@ -3,16 +3,12 @@ import "./DeleteBoardButton.css";
 import { useContext } from "react";
 import { CookieContext } from "../CookiesContext";
 import { CurrentTeamContext } from "../CurrentTeamContext";
+import { SocketContext } from "../SocketContext";
 
-function DeleteBoardButton({
-  boardID,
-  boards,
-  setBoards,
-  setAllBoards,
-  socket,
-}) {
+function DeleteBoardButton({ boardID, boards, setBoards, setAllBoards }) {
   const [cookies] = useContext(CookieContext);
   const [currTeamID] = useContext(CurrentTeamContext);
+  const [getConnection] = useContext(SocketContext);
 
   const handleClick = () => {
     const url = `http://localhost:3000/boards/${boardID}`;
@@ -27,7 +23,6 @@ function DeleteBoardButton({
         if (result.error) {
           // if there is already no board with that id on server side
           // than we simply delete it from client's state
-          console.log("Error");
           const updatedState = boards.filter((board) => board.id !== boardID);
           setBoards(updatedState);
           return;
@@ -41,7 +36,8 @@ function DeleteBoardButton({
           (board) => board.team_id === currTeamID
         );
         setBoards(newBoards);
-        socket.emit("board_update");
+        const socket = getConnection();
+        socket.emit("board_update", currTeamID);
       });
     // TODO: fetch error handling to be done
   };
@@ -59,8 +55,6 @@ DeleteBoardButton.propTypes = {
   boards: PropTypes.arrayOf(PropTypes.object).isRequired,
   setBoards: PropTypes.func.isRequired,
   setAllBoards: PropTypes.func.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  socket: PropTypes.object.isRequired,
 };
 
 export default DeleteBoardButton;
