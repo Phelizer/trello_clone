@@ -17,27 +17,11 @@ const BoardManager = ({ boards, setBoards, allBoards, setAllBoards }) => {
       // we subscribe on board_updates in this team
       // via websocket
       const socket = getConnection();
-      // const socketInstance = io("http://localhost:3000", {
-      //   query: `teamID=${currTeamID}`,
-      // });
-      // setSocket(socketInstance);
-      console.log("kal");
       subscribeToBoardUpdate(socket, allBoards, setAllBoards, setBoards);
-
-      // socketInstance.on("board_update", (result) => {
-      //   const duplicatedBoards = [...allBoards, ...result];
-      //   const updatedAllBoards = duplicatedBoards.filter(
-      //     (v, i, a) => a.findIndex((t) => t.id === v.id) === i
-      //   );
-      //   setAllBoards([...updatedAllBoards]);
-      //   setBoards(result);
-      //   // set new state
-      // });
 
       // unsubscribing
       return () => {
         unsubscribeFrom("board_update", socket, currTeamID);
-        // socketInstance.off("board_update");
       };
     }
     return null;

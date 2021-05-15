@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Board } from './board.model';
 import { ExtendedBoard } from './ExtendedBoard.model';
 import { pool } from '../dbPool';
@@ -53,6 +53,17 @@ export class BoardsService {
     return boards;
   }
 
+  async getBoardsOfTeam(team_id: number): Promise<Array<ExtendedBoard>> {
+    const boardsData = await pool.query(
+      'SELECT * FROM boards WHERE team_id = $1',
+      [team_id],
+    );
+
+    const boards = this.convertToBoards(boardsData.rows);
+
+    return boards;
+  }
+
   // converts array of plain objects from db
   // to array of objects of ExtendedBoard class
 
@@ -69,18 +80,4 @@ export class BoardsService {
 
     return extBoards;
   }
-
-  // getting all the boards
-  // async getAllBoards(): Promise<ExtendedBoard[]> {
-  //   // retrieving all the boards
-  //   const boardData = await pool.query(
-  //     'SELECT board_id, board_name, boards.team_id, team_name FROM boards LEFT JOIN teams ON boards.team_id = teams.team_id;',
-  //   );
-
-  //   //console.log(boardData.rows);
-
-  //   const boards = this.convertToBoards(boardData.rows);
-
-  //   return boards;
-  // }
 }

@@ -5,8 +5,6 @@ import TeamManager from "./Teams/TeamManager";
 import { CookieContext } from "./CookiesContext";
 import { CurrentTeamContext } from "./CurrentTeamContext";
 
-//
-
 const BoardScreen = () => {
   // needed for fetch error handling
   const [error, setError] = useState(null);
@@ -32,8 +30,9 @@ const BoardScreen = () => {
     const uniqueTeams = duplicatedTeams.filter(
       (v, i, a) => a.findIndex((t) => t.id === v.id) === i
     );
+    const notEmptyTeams = uniqueTeams.filter((team) => team.id);
 
-    return uniqueTeams;
+    return notEmptyTeams;
   };
 
   // fetching the list of boards
