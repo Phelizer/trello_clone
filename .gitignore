@@ -98,7 +98,6 @@ typings/
 
 # Optional eslint cache
 .eslintcache
-front-end/node_modules/.cache/.eslintcache
 
 # Optional stylelint cache
 .stylelintcache
