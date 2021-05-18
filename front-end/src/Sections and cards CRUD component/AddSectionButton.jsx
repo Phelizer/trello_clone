@@ -3,17 +3,20 @@ import PropTypes from "prop-types";
 import { useContext } from "react";
 import { getPath } from "../Utils/Utils";
 import { CookieContext } from "../CookiesContext";
+import { SocketContext } from "../SocketContext";
 
 function AddSectionButton({ setSections }) {
   const [cookies] = useContext(CookieContext);
+  const { getConnection } = useContext(SocketContext);
 
   const handleClick = () => {
     const sectionName = prompt("Input section name", "New section");
 
     // get array of path elements
     const path = getPath(window);
+    const boardID = path[0];
 
-    const url = `http://localhost:3000/board/${path[0]}`;
+    const url = `http://localhost:3000/board/${boardID}`;
     fetch(url, {
       method: "POST",
       body: JSON.stringify({
@@ -27,6 +30,8 @@ function AddSectionButton({ setSections }) {
       .then((res) => res.json())
       .then((result) => {
         setSections(result);
+        const socket = getConnection();
+        socket.emit("in-board_update", boardID);
       });
   };
 
@@ -40,13 +45,6 @@ function AddSectionButton({ setSections }) {
 }
 
 AddSectionButton.propTypes = {
-  /* sections: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string,
-      id: PropTypes.number,
-      position: PropTypes.number,
-    })
-  ).isRequired, */
   setSections: PropTypes.func.isRequired,
 };
 

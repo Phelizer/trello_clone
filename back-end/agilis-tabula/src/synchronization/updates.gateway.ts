@@ -7,11 +7,15 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { BoardsService } from '../boards/boards.service';
+import { SectionsService } from '../sections&tasks/sections.service';
+import { TasksService } from '../sections&tasks/tasks.service';
 
 @WebSocketGateway()
 export class BoardUpdateGateway {
   // ?
   boardsService = new BoardsService();
+  sectionsService = new SectionsService();
+  tasksService = new TasksService();
 
   @WebSocketServer()
   server: Server;
@@ -24,8 +28,6 @@ export class BoardUpdateGateway {
     const updatedBoards = await this.boardsService.getBoardsOfTeam(teamID);
 
     client.to(`teamID-${teamID}`).emit('board_update', updatedBoards);
-
-    // this.server.emit('board_update', updatedBoards);
   }
 
   // user subscribes on board updates of certain team
@@ -46,14 +48,51 @@ export class BoardUpdateGateway {
     client.leave(`teamID-${teamID}`);
   }
 
-  // to be removed...
-  @SubscribeMessage('connection')
-  handleConnection() {
-    console.log('connected');
+  // user subscribes on inner board updates of certain board
+  @SubscribeMessage('subscribe_to_in-board_update')
+  handleInBoardSubscription(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() boardID: number,
+  ) {
+    console.log('subscribe_to_in-board_update');
+
+    client.join(`boardID-${boardID}`);
   }
 
-  @SubscribeMessage('disconnect')
-  handleDisconnect() {
-    console.log('disconnected');
+  // user unsubscribes from inner board updates of certain board
+  @SubscribeMessage('unsubscribe_from_in-board_update')
+  handleInBoardUnsubscription(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() boardID: number,
+  ) {
+    console.log('unsubscribe_from_in-board_update');
+
+    client.leave(`boardID-${boardID}`);
   }
+
+  @SubscribeMessage('in-board_update')
+  async handleInBoardUpdate(
+    @MessageBody() boardID: number,
+    @ConnectedSocket() client: Socket,
+  ) {
+    console.log('in-board_update');
+
+    const [sections, tasks] = await Promise.all([
+      this.sectionsService.getAllSections(boardID),
+      this.tasksService.getAllTasks(boardID),
+    ]);
+
+    client.to(`boardID-${boardID}`).emit('in-board_update', [sections, tasks]);
+  }
+
+  // // to be removed...
+  // @SubscribeMessage('connection')
+  // handleConnection() {
+  //   console.log('connected');
+  // }
+
+  // @SubscribeMessage('disconnect')
+  // handleDisconnect() {
+  //   console.log('disconnected');
+  // }
 }

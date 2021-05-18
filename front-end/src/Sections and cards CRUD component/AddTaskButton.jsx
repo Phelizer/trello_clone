@@ -2,17 +2,20 @@ import PropTypes from "prop-types";
 import { useContext } from "react";
 import { getPath } from "../Utils/Utils";
 import { CookieContext } from "../CookiesContext";
+import { SocketContext } from "../SocketContext";
 
 const AddTaskButton = ({ setTasks, sectionID }) => {
   const [cookies] = useContext(CookieContext);
+  const { getConnection } = useContext(SocketContext);
 
   const handleClick = () => {
     const taskName = prompt("Input task");
 
     // get array of path elements
     const path = getPath(window);
+    const boardID = path[0];
 
-    const url = `http://localhost:3000/task/${path[0]}/${sectionID}`;
+    const url = `http://localhost:3000/task/${boardID}/${sectionID}`;
 
     fetch(url, {
       method: "POST",
@@ -28,6 +31,8 @@ const AddTaskButton = ({ setTasks, sectionID }) => {
       .then((res) => res.json())
       .then((result) => {
         setTasks(result);
+        const socket = getConnection();
+        socket.emit("in-board_update", boardID);
       });
   };
 

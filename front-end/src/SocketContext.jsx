@@ -37,16 +37,34 @@ export const SocketProvider = (props) => {
     });
   };
 
-  const unsubscribeFrom = (tag, connection) => {
-    let id = null;
-    if (tag === "board_update") id = currTeamID;
-    connection.emit(`unsubscribe_from_${tag}`, { tag, id });
-    connection.off("board_update");
+  const subscribeToInBoardUpdate = (
+    connection,
+    boardID,
+    setTasks,
+    setSections
+  ) => {
+    connection.emit("subscribe_to_in-board_update", boardID);
+    connection.on("in-board_update", (result) => {
+      const [sections, tasks] = result;
+      // set new state
+      setTasks(tasks);
+      setSections(sections);
+    });
+  };
+
+  const unsubscribeFrom = (tag, connection, id) => {
+    connection.emit(`unsubscribe_from_${tag}`, id);
+    connection.off(tag);
   };
 
   return (
     <SocketContext.Provider
-      value={[getConnection, subscribeToBoardUpdate, unsubscribeFrom]}
+      value={{
+        getConnection,
+        subscribeToBoardUpdate,
+        unsubscribeFrom,
+        subscribeToInBoardUpdate,
+      }}
     >
       {props.children}
     </SocketContext.Provider>

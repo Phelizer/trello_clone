@@ -3,15 +3,18 @@ import PropTypes from "prop-types";
 import { useContext } from "react";
 import { getPath } from "../Utils/Utils";
 import { CookieContext } from "../CookiesContext";
+import { SocketContext } from "../SocketContext";
 
 function DeleteSectionButton({ sectionID, sections, setSections }) {
   const [cookies] = useContext(CookieContext);
+  const { getConnection } = useContext(SocketContext);
 
   const handleClick = () => {
     // get array of path elements
     const path = getPath(window);
+    const boardID = path[0];
 
-    const url = `http://localhost:3000/board/${path[0]}/${sectionID}`;
+    const url = `http://localhost:3000/board/${boardID}/${sectionID}`;
     fetch(url, {
       method: "DELETE",
       headers: {
@@ -27,9 +30,11 @@ function DeleteSectionButton({ sectionID, sections, setSections }) {
             (board) => board.id !== sectionID
           );
           setSections(updatedState);
+        } else {
+          setSections(result);
+          const socket = getConnection();
+          socket.emit("in-board_update", boardID);
         }
-
-        setSections(result);
       });
   };
   return (
