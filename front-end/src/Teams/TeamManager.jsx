@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import Team from "./Team";
 import "./TeamManager.css";
+import AddTeamButton from "./AddTeamButton";
 
 const TeamManager = ({ teams, setTeams, setBoards, allBoards }) => (
   <div className="TeamManager">
@@ -14,7 +15,7 @@ const TeamManager = ({ teams, setTeams, setBoards, allBoards }) => (
         setBoards={setBoards}
       />
     ))}
-    {/* Add Team Butt. */}
+    <AddTeamButton setTeams={setTeams} />
   </div>
 );
 

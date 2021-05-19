@@ -7,9 +7,10 @@ import { UsersModule } from './users/users.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { BoardUpdateGateway } from './synchronization/updates.gateway';
+import { TeamsModule } from './teams/teams.module';
 
 @Module({
-  imports: [BoardsModule, SectionsModule, AuthModule, UsersModule],
+  imports: [BoardsModule, SectionsModule, AuthModule, UsersModule, TeamsModule],
   controllers: [AppController],
   providers: [
     {

@@ -9,10 +9,14 @@ import {
 } from '@nestjs/common';
 import { BoardsService } from './boards.service';
 import { getUserIDFromToken } from '../auth/JWTdecode';
+import { TeamsService } from '../teams/teams.service';
 
 @Controller('boards')
 export class BoardsController {
-  constructor(private readonly boardsService: BoardsService) {}
+  constructor(
+    private readonly boardsService: BoardsService,
+    private readonly teamsService: TeamsService,
+  ) {}
 
   // creating new board request handling
   @Post()
@@ -33,7 +37,7 @@ export class BoardsController {
     const user_id = getUserIDFromToken(BearerToken);
 
     const boardsPromise = this.boardsService.getBoardsOfUser(user_id);
-    const teamsPromise = this.boardsService.getTeams(user_id);
+    const teamsPromise = this.teamsService.getTeams(user_id);
     const [boards, teams] = await Promise.all([boardsPromise, teamsPromise]);
 
     return { boards, teams };
