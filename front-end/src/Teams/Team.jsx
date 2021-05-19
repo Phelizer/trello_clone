@@ -22,7 +22,7 @@ const Team = ({ name, id, setTeams, allBoards, setBoards }) => {
       <Link className="Members" to="">
         🧍
       </Link>
-      <DeleteTeamButton id={id} />
+      <DeleteTeamButton id={id} setTeams={setTeams} />
     </div>
   );
 };

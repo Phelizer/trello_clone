@@ -29,4 +29,17 @@ export class TeamsService {
     }));
     return teams;
   }
+
+  async removeTeam(teamID: number, userID: number): Promise<Array<any>> {
+    const teamsPromise = pool.query('DELETE FROM teams WHERE team_id = $1', [
+      teamID,
+    ]);
+    const teamsUsersPromise = await pool.query(
+      'DELETE FROM teams_users WHERE team_id = $1',
+      [teamID],
+    );
+
+    await Promise.all([teamsPromise, teamsUsersPromise]);
+    return this.getTeams(userID);
+  }
 }
