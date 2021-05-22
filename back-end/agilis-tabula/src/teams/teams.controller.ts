@@ -12,6 +12,8 @@ export class TeamsController {
   ) {
     const user_id = getUserIDFromToken(BearerToken);
     const teams = await this.teamsService.addBoard(teamName, user_id);
+    console.log(1);
+
     return teams;
   }
 
@@ -24,5 +26,16 @@ export class TeamsController {
     const teamID = parseInt(idObj.teamID);
 
     return this.teamsService.removeTeam(teamID, user_id);
+  }
+
+  @Post('users/:teamID')
+  async addUserToTeam(
+    @Body('email') email: string,
+    @Param() idObj: { teamID: string },
+  ) {
+    const teamID = parseInt(idObj.teamID);
+    console.log(2, 3);
+
+    return this.teamsService.addUserToTeam(email, teamID);
   }
 }

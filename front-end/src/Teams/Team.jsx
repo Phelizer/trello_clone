@@ -4,10 +4,16 @@ import DeleteTeamButton from "./DeleteTeamButton";
 import "./Team.css";
 import { CurrentTeamContext } from "../CurrentTeamContext";
 import Popup from "../Utils/Popup";
+import { CookieContext } from "../CookiesContext";
 
 const Team = ({ name, id, setTeams, allBoards, setBoards }) => {
   const [currTeamID, setCurrTeamID] = useContext(CurrentTeamContext);
   const [popupActive, setPopupActive] = useState(false);
+
+  const [currEmailToAdd, setCurrEmailToAdd] = useState("");
+  const [currEmailToDelete, setCurrEmailToDelete] = useState("");
+
+  const [cookies] = useContext(CookieContext);
 
   const changeTeam = () => {
     const newBoards = allBoards.filter((board) => board.team_id === id);
@@ -15,10 +21,31 @@ const Team = ({ name, id, setTeams, allBoards, setBoards }) => {
     setCurrTeamID(id);
   };
 
-  const submitAddHandler = () => {};
+  const submitAddHandler = (e) => {
+    e.preventDefault();
+    const url = `http://localhost:3000/team/users/${id}`;
+    fetch(url, {
+      method: "POST",
+      body: JSON.stringify({
+        email: currEmailToAdd,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${cookies.JWT}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        console.log(result);
+      });
+  };
   const submitRemoveHandler = () => {};
-  const addUserChangeHandler = () => {};
-  const deleteUserChangeHandler = () => {};
+  const addUserChangeHandler = (e) => {
+    setCurrEmailToAdd(e.target.value);
+  };
+  const deleteUserChangeHandler = (e) => {
+    setCurrEmailToDelete(e.target.value);
+  };
 
   return (
     <div className="Team">
@@ -33,6 +60,7 @@ const Team = ({ name, id, setTeams, allBoards, setBoards }) => {
         🧍
       </button>
       <DeleteTeamButton id={id} setTeams={setTeams} />
+
       <Popup active={popupActive} setActive={setPopupActive}>
         <form onSubmit={submitAddHandler}>
           <label htmlFor="userToAdd">

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { pool } from '../dbPool';
 
 @Injectable()
@@ -41,5 +41,23 @@ export class TeamsService {
 
     await Promise.all([teamsPromise, teamsUsersPromise]);
     return this.getTeams(userID);
+  }
+
+  async addUserToTeam(email: string, teamID: number): Promise<boolean> {
+    const userIDData = await pool.query(
+      'SELECT user_id from users where email = $1;',
+      [email],
+    );
+
+    const userID = userIDData.rows[0] ? userIDData.rows[0].user_id : null;
+    if (userID === null)
+      throw new NotFoundException('There is no user with such email');
+
+    await pool.query('INSERT INTO teams_users VALUES ($1, $2)', [
+      teamID,
+      userID,
+    ]);
+
+    return true;
   }
 }
