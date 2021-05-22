@@ -1,12 +1,13 @@
-import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useState } from "react";
 import PropTypes from "prop-types";
 import DeleteTeamButton from "./DeleteTeamButton";
 import "./Team.css";
 import { CurrentTeamContext } from "../CurrentTeamContext";
+import Popup from "../Utils/Popup";
 
 const Team = ({ name, id, setTeams, allBoards, setBoards }) => {
   const [currTeamID, setCurrTeamID] = useContext(CurrentTeamContext);
+  const [popupActive, setPopupActive] = useState(false);
 
   const changeTeam = () => {
     const newBoards = allBoards.filter((board) => board.team_id === id);
@@ -14,15 +15,49 @@ const Team = ({ name, id, setTeams, allBoards, setBoards }) => {
     setCurrTeamID(id);
   };
 
+  const submitAddHandler = () => {};
+  const submitRemoveHandler = () => {};
+  const addUserChangeHandler = () => {};
+  const deleteUserChangeHandler = () => {};
+
   return (
     <div className="Team">
       <button type="button" onClick={changeTeam}>
         {name}
       </button>
-      <Link className="Members" to="">
+      <button
+        type="button"
+        className="Members"
+        onClick={() => setPopupActive(true)}
+      >
         🧍
-      </Link>
+      </button>
       <DeleteTeamButton id={id} setTeams={setTeams} />
+      <Popup active={popupActive} setActive={setPopupActive}>
+        <form onSubmit={submitAddHandler}>
+          <label htmlFor="userToAdd">
+            Add user by email:
+            <input
+              type="text"
+              id="userToAdd"
+              name="userToAdd"
+              onChange={addUserChangeHandler}
+            />
+          </label>
+        </form>
+
+        <form onSubmit={submitRemoveHandler}>
+          <label htmlFor="userToAdd">
+            Remove user by email:
+            <input
+              type="text"
+              id="userToDelete"
+              name="userToDelete"
+              onChange={deleteUserChangeHandler}
+            />
+          </label>
+        </form>
+      </Popup>
     </div>
   );
 };
